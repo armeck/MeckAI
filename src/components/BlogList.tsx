@@ -22,8 +22,8 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
   const gridPosts = filteredPosts.filter((p) => p.id !== featuredPost.id || selectedCategory !== 'all');
 
   return (
-    <div className="py-12 md:py-20">
-      <div className="mx-auto max-w-6xl px-6">
+    <div className="py-8 md:py-16">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         
         {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between pb-8 mb-8 border-b border-blue-900/40">

@@ -55,11 +55,11 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
   };
 
   return (
-    <div className="py-12 md:py-20">
-      <div className="mx-auto max-w-6xl px-6">
+    <div className="py-8 md:py-16">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
         
         {/* Breadcrumb Navigation */}
-        <div className="flex items-center justify-between pb-8 mb-8 border-b border-blue-900/40">
+        <div className="flex items-center justify-between pb-6 mb-6 sm:pb-8 sm:mb-8 border-b border-blue-900/40">
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
             <button
               onClick={onGoHome}
@@ -80,15 +80,15 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
         </div>
 
         {/* Section Header */}
-        <div className="max-w-3xl space-y-4 mb-12">
+        <div className="max-w-3xl space-y-4 mb-8 sm:mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-red-500/30 bg-red-950/40 text-xs font-mono tracking-widest uppercase text-red-400 font-bold">
             <Quote className="h-3.5 w-3.5 text-red-500" />
             <span>UNFILTERED FIELD TESTIMONIALS · REAL WORKERS, REAL COMPUTE</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight [text-wrap:balance]">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white tracking-tight [text-wrap:balance]">
             The Backbone of America Runs on MeckAI.
           </h1>
-          <p className="text-base text-slate-300 leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-300 leading-relaxed">
             From combine harvester hydraulic diagnostics and squarebody transmission fabrication 
             to parking lot grocery cart trajectory physics and midnight church van alternator repairs—discover how 
             independent operators deploy raw, sovereign artificial intelligence without corporate HR lectures.
@@ -96,12 +96,12 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
         </div>
 
         {/* Category Filters */}
-        <div className="flex flex-wrap items-center gap-2 pb-8 mb-10 border-b border-blue-900/40">
+        <div className="flex flex-wrap items-center gap-2 pb-6 mb-8 sm:pb-8 sm:mb-10 border-b border-blue-900/40">
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedFilter(cat)}
-              className={`px-3.5 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
+              className={`px-3 py-1.5 rounded-md text-xs font-mono transition-all cursor-pointer ${
                 selectedFilter === cat
                   ? 'bg-red-600 text-white font-bold shadow-md shadow-red-950/40 border border-red-400/50'
                   : 'bg-[#0e1d42]/60 border border-blue-900/60 text-slate-300 hover:text-white hover:border-blue-700'
@@ -113,7 +113,7 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
         </div>
 
         {/* Testimonials Cards Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 mb-16">
           {filteredTestimonials.map((t: Testimonial) => {
             const isComparing = !!expandedComparison[t.id];
             const hasImgError = !!imgErrors[t.id];
@@ -121,45 +121,45 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
             return (
               <div
                 key={t.id}
-                className="p-8 rounded-2xl border-2 border-blue-900/70 bg-gradient-to-b from-[#0e1d42] to-[#081226] hover:border-red-500/60 transition-all flex flex-col justify-between group shadow-xl"
+                className="p-5 sm:p-7 md:p-8 rounded-2xl border-2 border-blue-900/70 bg-gradient-to-b from-[#0e1d42] to-[#081226] hover:border-red-500/60 transition-all flex flex-col justify-between group shadow-xl"
               >
-                <div className="space-y-6">
+                <div className="space-y-5 sm:space-y-6">
                   
                   {/* Profile Header */}
-                  <div className="flex items-start gap-4">
+                  <div className="flex items-start gap-3.5 sm:gap-4">
                     <div className="relative shrink-0">
                       {!hasImgError ? (
                         <img
                           src={t.imageUrl}
                           alt={t.name}
                           onError={() => handleImageError(t.id)}
-                          className="h-20 w-20 rounded-full object-cover border-2 border-red-500 shadow-lg ring-4 ring-blue-900/40"
+                          className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-red-500 shadow-lg ring-2 sm:ring-4 ring-blue-900/40"
                         />
                       ) : (
-                        <div className="h-20 w-20 rounded-full bg-gradient-to-br from-red-600 to-blue-900 flex items-center justify-center text-white font-mono font-bold text-xl border-2 border-red-500 shadow-lg ring-4 ring-blue-900/40">
+                        <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-gradient-to-br from-red-600 to-blue-900 flex items-center justify-center text-white font-mono font-bold text-lg sm:text-xl border-2 border-red-500 shadow-lg ring-2 sm:ring-4 ring-blue-900/40">
                           {t.name.split(' ').map(n => n[0]).join('')}
                         </div>
                       )}
-                      <span className="absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full bg-red-600 text-[10px] text-white font-bold border-2 border-[#0e1d42]">
+                      <span className="absolute -bottom-1 -right-1 flex h-5 w-5 sm:h-6 sm:w-6 items-center justify-center rounded-full bg-red-600 text-[9px] sm:text-[10px] text-white font-bold border-2 border-[#0e1d42]">
                         ★
                       </span>
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <h3 className="text-lg font-extrabold text-white tracking-tight truncate">
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-2 mb-1">
+                        <h3 className="text-base sm:text-lg md:text-xl font-extrabold text-white tracking-tight leading-snug break-words">
                           {t.name}
                         </h3>
-                        <span className="text-[10px] font-mono font-bold text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-800/40 shrink-0">
+                        <span className="self-start sm:self-auto text-[10px] font-mono font-bold text-red-400 bg-red-950/60 px-2 py-0.5 rounded border border-red-800/40 shrink-0">
                           {t.tradeCategory}
                         </span>
                       </div>
 
-                      <div className="text-xs font-medium text-slate-300 mt-0.5">
+                      <div className="text-xs font-medium text-slate-300 leading-snug">
                         {t.role}
                       </div>
 
-                      <div className="text-xs text-slate-400 truncate mt-0.5">
+                      <div className="text-xs text-slate-400 break-words mt-0.5 leading-snug">
                         {t.companyOrAffiliation}
                       </div>
 
@@ -171,11 +171,11 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({ onGoHome, on
                   </div>
 
                   {/* Technical Use Case Tag */}
-                  <div className="p-2.5 rounded-lg bg-[#070e1e] border border-blue-900/80 text-[11px] font-mono text-slate-300 flex items-center gap-2">
-                    <Wrench className="h-3.5 w-3.5 text-red-400 shrink-0" />
-                    <span className="truncate">
+                  <div className="p-2.5 sm:p-3 rounded-lg bg-[#070e1e] border border-blue-900/80 text-[11px] font-mono text-slate-300 flex items-start gap-2">
+                    <Wrench className="h-3.5 w-3.5 text-red-400 shrink-0 mt-0.5" />
+                    <div className="break-words leading-relaxed">
                       <strong className="text-white">Applied Use Case:</strong> {t.useCase}
-                    </span>
+                    </div>
                   </div>
 
                   {/* Testimonial Quote */}

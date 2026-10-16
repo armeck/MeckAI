@@ -6,12 +6,13 @@ import { BlogPostView } from './components/BlogPostView';
 import { TestimonialsPage } from './components/TestimonialsPage';
 import { BLOG_POSTS } from './data/blogPosts';
 import { BlogPost } from './types/blog';
-import { ArrowRight, ShieldCheck, Cpu, Database, CheckCircle2, Server, Lock, Newspaper, BookOpen, Users, Quote } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Cpu, Database, CheckCircle2, Server, Lock, Newspaper, BookOpen, Users, Quote, Menu, X, ChevronRight } from 'lucide-react';
 
 export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post' | 'testimonials'>('home');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [demoActivated, setDemoActivated] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Sync hash routing (e.g. #/blog, #/blog/:slug, #/testimonials)
   useEffect(() => {
@@ -85,14 +86,14 @@ export default function App() {
     <div className="min-h-screen bg-[#070e1e] text-slate-100 flex flex-col font-sans selection:bg-red-600/30 selection:text-white">
       
       {/* Top Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-blue-900/40 bg-[#070e1e]/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
+      <header className="sticky top-0 z-40 w-full border-b border-blue-900/40 bg-[#070e1e]/95 backdrop-blur-md">
+        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <div onClick={navigateToHome} className="cursor-pointer">
             <Logo size="md" />
           </div>
 
-          <div className="flex items-center gap-5">
-            {/* Navigation links */}
+          {/* Desktop Navigation Links */}
+          <div className="hidden md:flex items-center gap-5">
             <nav className="flex items-center gap-4 text-xs font-mono">
               <button
                 onClick={navigateToHome}
@@ -125,7 +126,7 @@ export default function App() {
             </nav>
 
             {/* Grid Status Indicator */}
-            <div className="hidden sm:flex items-center gap-2.5 px-3 py-1 rounded-md border border-blue-900/60 bg-[#0e1d42]/60 shadow-xs">
+            <div className="flex items-center gap-2.5 px-3 py-1 rounded-md border border-blue-900/60 bg-[#0e1d42]/60 shadow-xs">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60"></span>
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
@@ -135,7 +136,92 @@ export default function App() {
               </span>
             </div>
           </div>
+
+          {/* Mobile Menu Toggle Button */}
+          <div className="flex md:hidden items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle mobile menu"
+              className="p-2 rounded-lg border border-blue-900/70 bg-[#0c1836] text-slate-200 hover:text-white hover:border-red-500/60 transition-all cursor-pointer"
+            >
+              {mobileMenuOpen ? <X className="h-5 w-5 text-red-500" /> : <Menu className="h-5 w-5 text-slate-300" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Dropdown Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-blue-900/50 bg-[#070e1e]/98 px-4 py-4 space-y-3 backdrop-blur-xl animate-in slide-in-from-top-2 duration-150 shadow-2xl">
+            <div className="flex flex-col space-y-1 font-mono text-xs">
+              <button
+                onClick={() => {
+                  navigateToHome();
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex items-center justify-between p-3 rounded-lg text-left transition-colors cursor-pointer ${
+                  currentView === 'home'
+                    ? 'bg-red-600/20 border border-red-500/50 text-white font-bold'
+                    : 'text-slate-300 hover:bg-[#0d1c3e] hover:text-white'
+                }`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <span className="h-2 w-2 rounded-full bg-red-500" />
+                  <span>Platform Core</span>
+                </span>
+                <ChevronRight className="h-4 w-4 text-slate-500" />
+              </button>
+
+              <button
+                onClick={() => {
+                  navigateToBlog();
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex items-center justify-between p-3 rounded-lg text-left transition-colors cursor-pointer ${
+                  currentView === 'blog' || currentView === 'post'
+                    ? 'bg-red-600/20 border border-red-500/50 text-red-400 font-bold'
+                    : 'text-slate-300 hover:bg-[#0d1c3e] hover:text-white'
+                }`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <Newspaper className="h-4 w-4 text-red-500" />
+                  <span>The Sovereign Dispatch (Blog)</span>
+                </span>
+                <ChevronRight className="h-4 w-4 text-slate-500" />
+              </button>
+
+              <button
+                onClick={() => {
+                  navigateToTestimonials();
+                  setMobileMenuOpen(false);
+                }}
+                className={`flex items-center justify-between p-3 rounded-lg text-left transition-colors cursor-pointer ${
+                  currentView === 'testimonials'
+                    ? 'bg-red-600/20 border border-red-500/50 text-red-400 font-bold'
+                    : 'text-slate-300 hover:bg-[#0d1c3e] hover:text-white'
+                }`}
+              >
+                <span className="flex items-center gap-2.5">
+                  <Users className="h-4 w-4 text-red-500" />
+                  <span>Field Voices (Testimonials)</span>
+                </span>
+                <ChevronRight className="h-4 w-4 text-slate-500" />
+              </button>
+            </div>
+
+            {/* Mobile Grid Status */}
+            <div className="pt-2 border-t border-blue-900/40 flex items-center justify-between px-2 text-xs font-mono">
+              <span className="text-slate-400">Heartland Grid:</span>
+              <span className="flex items-center gap-1.5 text-emerald-400 font-semibold">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-60"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                Nominal (58°F Wellhead)
+              </span>
+            </div>
+          </div>
+        )}
       </header>
 
       {/* Main View Router */}
@@ -438,7 +524,7 @@ export default function App() {
 
       {/* Minimalist Plausible Footer */}
       <footer className="border-t border-blue-950 bg-[#050b18] py-8 text-xs text-slate-400">
-        <div className="mx-auto max-w-6xl px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2 font-mono">
             <span onClick={navigateToHome} className="text-white font-bold tracking-tight cursor-pointer">
               Meck<span className="text-red-500">AI</span><span className="text-slate-400">.net</span>

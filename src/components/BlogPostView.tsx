@@ -29,8 +29,8 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
   const nextPost = BLOG_POSTS[(currentIndex + 1) % BLOG_POSTS.length];
 
   return (
-    <article className="py-12 md:py-20">
-      <div className="mx-auto max-w-4xl px-6">
+    <article className="py-8 md:py-16">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6">
         
         {/* Navigation Bar */}
         <div className="flex items-center justify-between pb-6 mb-8 border-b border-blue-900/40">

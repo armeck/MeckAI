@@ -33,7 +33,7 @@ export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
             .net
           </span>
         </div>
-        <span className="text-[10px] font-mono tracking-wider text-slate-400 uppercase">
+        <span className="hidden sm:block text-[10px] font-mono tracking-wider text-slate-400 uppercase">
           Sovereign Intelligence
         </span>
       </div>
