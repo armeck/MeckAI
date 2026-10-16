@@ -1,0 +1,14 @@
+services:
+  meckai:
+    build: .
+    container_name: meckai-net
+    image: meckai-landing:latest
+    restart: unless-stopped
+    ports:
+      # Host port 8095 mapped to container Nginx port 80 (80 & 8080 avoided)
+      - "8095:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
