@@ -25,7 +25,7 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
     <div className="py-12 md:py-20">
       <div className="mx-auto max-w-6xl px-6">
         
-        {/* Breadcrumb / Top Navigation back to Home */}
+        {/* Breadcrumb Navigation */}
         <div className="flex items-center justify-between pb-8 mb-8 border-b border-blue-900/40">
           <div className="flex items-center gap-2 text-xs font-mono text-slate-400">
             <button
@@ -78,7 +78,7 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
           ))}
         </div>
 
-        {/* Featured Post (Only shown if 'all' filter is active) */}
+        {/* Featured Post */}
         {selectedCategory === 'all' && (
           <div
             onClick={() => onSelectPost(featuredPost)}
@@ -135,7 +135,6 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
               className="p-6 rounded-xl border border-blue-900/60 bg-[#0c1836]/40 hover:bg-[#0e1d42]/70 hover:border-blue-700/80 transition-all cursor-pointer flex flex-col justify-between group shadow-sm"
             >
               <div className="space-y-4">
-                {/* Illustration Card Thumbnail */}
                 <div className="h-44 w-full">
                   <BlogIllustration type={post.imageType} className="w-full h-full" />
                 </div>

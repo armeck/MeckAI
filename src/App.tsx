@@ -3,16 +3,17 @@ import { Logo } from './components/Logo';
 import { NeuralCanvas } from './components/NeuralCanvas';
 import { BlogList } from './components/BlogList';
 import { BlogPostView } from './components/BlogPostView';
+import { TestimonialsPage } from './components/TestimonialsPage';
 import { BLOG_POSTS } from './data/blogPosts';
 import { BlogPost } from './types/blog';
-import { ArrowRight, ShieldCheck, Cpu, Database, CheckCircle2, Server, Lock, Newspaper, BookOpen } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Cpu, Database, CheckCircle2, Server, Lock, Newspaper, BookOpen, Users, Quote } from 'lucide-react';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post' | 'testimonials'>('home');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [demoActivated, setDemoActivated] = useState(false);
 
-  // Sync hash routing (e.g. #/blog or #/blog/:slug)
+  // Sync hash routing (e.g. #/blog, #/blog/:slug, #/testimonials)
   useEffect(() => {
     const handleHash = () => {
       const hash = window.location.hash;
@@ -32,6 +33,12 @@ export default function App() {
         window.scrollTo(0, 0);
         return;
       }
+      if (hash === '#/testimonials') {
+        setCurrentView('testimonials');
+        setSelectedPost(null);
+        window.scrollTo(0, 0);
+        return;
+      }
       setCurrentView('home');
       setSelectedPost(null);
     };
@@ -44,6 +51,13 @@ export default function App() {
   const navigateToBlog = () => {
     window.location.hash = '#/blog';
     setCurrentView('blog');
+    setSelectedPost(null);
+    window.scrollTo(0, 0);
+  };
+
+  const navigateToTestimonials = () => {
+    window.location.hash = '#/testimonials';
+    setCurrentView('testimonials');
     setSelectedPost(null);
     window.scrollTo(0, 0);
   };
@@ -77,7 +91,7 @@ export default function App() {
             <Logo size="md" />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-5">
             {/* Navigation links */}
             <nav className="flex items-center gap-4 text-xs font-mono">
               <button
@@ -92,15 +106,25 @@ export default function App() {
               <button
                 onClick={navigateToBlog}
                 className={`py-1 flex items-center gap-1.5 transition-colors cursor-pointer ${
-                  currentView !== 'home' ? 'text-red-400 font-bold' : 'text-slate-400 hover:text-white'
+                  currentView === 'blog' || currentView === 'post' ? 'text-red-400 font-bold' : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <Newspaper className="h-3.5 w-3.5 text-red-500" />
                 <span>Dispatches</span>
               </button>
+
+              <button
+                onClick={navigateToTestimonials}
+                className={`py-1 flex items-center gap-1.5 transition-colors cursor-pointer ${
+                  currentView === 'testimonials' ? 'text-red-400 font-bold' : 'text-slate-400 hover:text-white'
+                }`}
+              >
+                <Users className="h-3.5 w-3.5 text-red-500" />
+                <span>Field Voices</span>
+              </button>
             </nav>
 
-            {/* Grid & Cluster Status Indicator */}
+            {/* Grid Status Indicator */}
             <div className="hidden sm:flex items-center gap-2.5 px-3 py-1 rounded-md border border-blue-900/60 bg-[#0e1d42]/60 shadow-xs">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-60"></span>
@@ -331,25 +355,47 @@ export default function App() {
 
                 </div>
 
-                {/* Callout Link to Blog / Dispatches */}
-                <div className="mt-14 p-6 rounded-xl border border-blue-900/70 bg-[#0c1836]/60 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-red-600/20 border border-red-500/40 text-red-400">
-                      <BookOpen className="h-5 w-5" />
+                {/* Callout Strip Linking to Testimonials & Blog */}
+                <div className="mt-14 grid grid-cols-1 md:grid-cols-2 gap-6">
+                  
+                  {/* Testimonials Callout */}
+                  <div 
+                    onClick={navigateToTestimonials}
+                    className="p-6 rounded-xl border border-blue-900/70 bg-[#0c1836]/60 hover:bg-[#0e1d42]/90 hover:border-red-500/50 transition-all cursor-pointer group flex items-start gap-4"
+                  >
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-red-600/20 border border-red-500/40 text-red-400 group-hover:bg-red-600 group-hover:text-white transition-all">
+                      <Quote className="h-5 w-5" />
                     </div>
-                    <div className="text-left">
-                      <div className="text-sm font-bold text-white">The Sovereign Dispatch</div>
-                      <div className="text-xs text-slate-400">Read field notes on West Texas cooling, diesel redundancy, and de-sanitizing vector spaces.</div>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-white">Field Voices &amp; Testimonials</span>
+                        <ArrowRight className="h-4 w-4 text-red-500 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-xs text-slate-300">
+                        Hear from combine mechanics, transmission builders, and Publix baggers who deployed MeckAI without HR lectures.
+                      </p>
                     </div>
                   </div>
 
-                  <button
+                  {/* Blog Dispatches Callout */}
+                  <div 
                     onClick={navigateToBlog}
-                    className="px-4 py-2 rounded-md bg-red-600 hover:bg-red-500 text-white text-xs font-mono font-bold flex items-center gap-1.5 whitespace-nowrap transition-colors cursor-pointer"
+                    className="p-6 rounded-xl border border-blue-900/70 bg-[#0c1836]/60 hover:bg-[#0e1d42]/90 hover:border-red-500/50 transition-all cursor-pointer group flex items-start gap-4"
                   >
-                    <span>Read All 6 Dispatches</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-blue-600/20 border border-blue-500/40 text-blue-400 group-hover:bg-blue-600 group-hover:text-white transition-all">
+                      <BookOpen className="h-5 w-5" />
+                    </div>
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between">
+                        <span className="text-sm font-bold text-white">The Sovereign Dispatch</span>
+                        <ArrowRight className="h-4 w-4 text-blue-400 group-hover:translate-x-1 transition-transform" />
+                      </div>
+                      <p className="text-xs text-slate-300">
+                        Technical field notes on West Texas deep-aquifer cooling, diesel turbine backup, and vector de-sanitization.
+                      </p>
+                    </div>
+                  </div>
+
                 </div>
 
               </div>
@@ -375,6 +421,19 @@ export default function App() {
           />
         )}
 
+        {/* VIEW 4: TESTIMONIALS PAGE */}
+        {currentView === 'testimonials' && (
+          <TestimonialsPage
+            onGoHome={navigateToHome}
+            onProvisionNode={() => {
+              navigateToHome();
+              setTimeout(() => {
+                handleInitialize();
+              }, 200);
+            }}
+          />
+        )}
+
       </main>
 
       {/* Minimalist Plausible Footer */}
@@ -392,8 +451,11 @@ export default function App() {
             <button onClick={navigateToHome} className="hover:text-white transition-colors cursor-pointer">
               Platform
             </button>
-            <button onClick={navigateToBlog} className="text-red-400 hover:text-white transition-colors cursor-pointer">
-              The Sovereign Dispatch (Blog)
+            <button onClick={navigateToBlog} className="hover:text-white transition-colors cursor-pointer">
+              Dispatches (Blog)
+            </button>
+            <button onClick={navigateToTestimonials} className="text-red-400 hover:text-white transition-colors cursor-pointer">
+              Field Voices (Testimonials)
             </button>
             <span className="text-slate-600">·</span>
             <span>&copy; {new Date().getFullYear()} MeckAI.net</span>

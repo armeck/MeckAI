@@ -1,6 +1,6 @@
 {
   "name": "MeckAI – Autonomous Intelligence & Next-Gen Systems",
-  "description": "High-performance artificial intelligence platform, autonomous workflows, and enterprise intelligence systems powered by MeckAI.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "description": "High-performance sovereign artificial intelligence platform, domestically hosted runtimes, and unfiltered enterprise neural systems powered by MeckAI.",
+  "permissions": [],
+  "capabilities": []
 }

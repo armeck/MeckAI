@@ -32,7 +32,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
 
     window.addEventListener('resize', handleResize);
 
-    const particleCount = Math.min(Math.floor((width * height) / 10000), 75);
+    const particleCount = Math.min(Math.floor((width * height) / 11000), 70);
     const particles: Point[] = [];
 
     const types: ('red' | 'white' | 'blue')[] = ['red', 'white', 'blue'];
@@ -47,7 +47,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         radius,
         baseRadius: radius,
         alpha: Math.random() * 0.45 + 0.35,
-        colorType: types[i % 3], // Red, White, and Blue nodes
+        colorType: types[i % 3],
       });
     }
 
@@ -73,22 +73,22 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Deep patriotic radial glow in center
+      // Deep patriotic radial glow
       const gradient = ctx.createRadialGradient(
         width / 2,
         height / 2,
         20,
         width / 2,
         height / 2,
-        width * 0.65
+        width * 0.6
       );
-      gradient.addColorStop(0, 'rgba(30, 58, 138, 0.12)');
-      gradient.addColorStop(0.5, 'rgba(185, 28, 28, 0.05)');
+      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
+      gradient.addColorStop(0.6, 'rgba(239, 68, 68, 0.03)');
       gradient.addColorStop(1, 'rgba(7, 14, 30, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      // Update and draw Red, White, and Blue particles
+      // Draw particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -97,7 +97,6 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
 
-        // Gentle cursor interaction
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -110,7 +109,6 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
           p.radius = Math.max(p.baseRadius, p.radius - 0.05);
         }
 
-        // Draw node
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         if (p.colorType === 'red') {
@@ -122,12 +120,11 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         }
         ctx.fill();
 
-        // Connect nearby nodes
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
           if (dist2 < connectionDistance) {
-            const lineAlpha = (1 - dist2 / connectionDistance) * 0.18;
+            const lineAlpha = (1 - dist2 / connectionDistance) * 0.22;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
@@ -139,7 +136,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
             } else {
               ctx.strokeStyle = `rgba(147, 197, 253, ${lineAlpha})`;
             }
-            ctx.lineWidth = 0.75;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }

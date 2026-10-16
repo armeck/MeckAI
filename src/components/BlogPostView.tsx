@@ -2,7 +2,7 @@ import React from 'react';
 import { BlogPost } from '../types/blog';
 import { BLOG_POSTS } from '../data/blogPosts';
 import { BlogIllustration } from './BlogIllustration';
-import { ArrowLeft, Clock, User, Share2, ShieldCheck, ArrowRight } from 'lucide-react';
+import { ArrowLeft, Clock, User, Share2, ShieldCheck } from 'lucide-react';
 
 interface BlogPostViewProps {
   post: BlogPost;
@@ -25,7 +25,6 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Find next post
   const currentIndex = BLOG_POSTS.findIndex((p) => p.id === post.id);
   const nextPost = BLOG_POSTS[(currentIndex + 1) % BLOG_POSTS.length];
 
@@ -84,7 +83,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
           </div>
         </header>
 
-        {/* Themed Hero Technical Schematic / Illustration */}
+        {/* Hero Illustration */}
         <div className="mb-10 h-72 sm:h-96 w-full shadow-xl">
           <BlogIllustration type={post.imageType} className="w-full h-full" />
         </div>
