@@ -8,6 +8,7 @@ interface Point {
   radius: number;
   baseRadius: number;
   alpha: number;
+  isRed: boolean;
 }
 
 export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -31,8 +32,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
 
     window.addEventListener('resize', handleResize);
 
-    // Particle nodes count based on screen width
-    const particleCount = Math.min(Math.floor((width * height) / 11000), 75);
+    const particleCount = Math.min(Math.floor((width * height) / 11000), 70);
     const particles: Point[] = [];
 
     for (let i = 0; i < particleCount; i++) {
@@ -40,11 +40,12 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.45,
-        vy: (Math.random() - 0.5) * 0.45,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
         radius,
         baseRadius: radius,
-        alpha: Math.random() * 0.5 + 0.35,
+        alpha: Math.random() * 0.45 + 0.35,
+        isRed: i % 6 === 0, // Patriotic crimson accent on 1 out of 6 nodes
       });
     }
 
@@ -70,7 +71,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Draw subtle ambient radial glow in the center
+      // Ambient radial glow in deep navy & red
       const gradient = ctx.createRadialGradient(
         width / 2,
         height / 2,
@@ -79,9 +80,9 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         height / 2,
         width * 0.6
       );
-      gradient.addColorStop(0, 'rgba(56, 189, 248, 0.04)');
-      gradient.addColorStop(0.5, 'rgba(37, 99, 235, 0.02)');
-      gradient.addColorStop(1, 'rgba(7, 9, 14, 0)');
+      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
+      gradient.addColorStop(0.6, 'rgba(239, 68, 68, 0.03)');
+      gradient.addColorStop(1, 'rgba(9, 20, 40, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
@@ -91,11 +92,10 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         p.x += p.vx;
         p.y += p.vy;
 
-        // Bounce on boundary
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
 
-        // Mouse interaction
+        // Gentle mouse interaction
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -103,18 +103,20 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
           const force = (120 - dist) / 120;
           p.x -= (dx / dist) * force * 1.5;
           p.y -= (dy / dist) * force * 1.5;
-          p.radius = p.baseRadius + force * 1.8;
+          p.radius = p.baseRadius + force * 1.6;
         } else {
           p.radius = Math.max(p.baseRadius, p.radius - 0.05);
         }
 
-        // Draw node
+        // Draw node (white/sky or glowing red)
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(56, 189, 248, ${p.alpha})`;
+        ctx.fillStyle = p.isRed
+          ? `rgba(239, 68, 68, ${p.alpha * 1.2})`
+          : `rgba(224, 231, 255, ${p.alpha})`;
         ctx.fill();
 
-        // Connect with nearby nodes
+        // Connect nearby nodes
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
           const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -123,7 +125,9 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(56, 189, 248, ${lineAlpha})`;
+            ctx.strokeStyle = (p.isRed || p2.isRed)
+              ? `rgba(239, 68, 68, ${lineAlpha * 0.9})`
+              : `rgba(147, 197, 253, ${lineAlpha})`;
             ctx.lineWidth = 0.8;
             ctx.stroke();
           }

@@ -13,25 +13,28 @@ export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
   };
 
   return (
-    <div className={`flex items-center gap-2.5 font-bold tracking-tight text-white select-none ${className}`}>
-      {/* Generic Sleek Geometric Emblem: Modern Hexagonal / M-Apex geometry */}
-      <div className={`relative flex items-center justify-center rounded-lg bg-zinc-900 border border-zinc-700/80 shadow-[0_0_12px_rgba(56,189,248,0.15)] ${sizeClasses[size].split(' ')[0]} ${sizeClasses[size].split(' ')[1]}`}>
+    <div className={`flex items-center gap-2.5 font-bold tracking-tight select-none ${className}`}>
+      {/* Patriotic Navy & Red Emblem */}
+      <div className={`relative flex items-center justify-center rounded-lg bg-[#0e1d42] border border-blue-500/30 shadow-[0_0_12px_rgba(30,58,138,0.3)] ${sizeClasses[size].split(' ')[0]} ${sizeClasses[size].split(' ')[1]}`}>
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          className="w-3/5 h-3/5 text-sky-400 stroke-current"
-          strokeWidth="2.2"
+          className="w-3/5 h-3/5 text-white stroke-current"
+          strokeWidth="2.3"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          {/* Minimalist abstract geometric M shape */}
           <path d="M4 19V5l8 7 8-7v14" />
         </svg>
+        {/* Subtle crimson star/accent pip */}
+        <span className="absolute -top-1 -right-1 flex h-2 w-2">
+          <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500 ring-2 ring-[#091428]"></span>
+        </span>
       </div>
 
       <div className="flex items-baseline">
-        <span className="font-extrabold text-zinc-100 tracking-tight">MeckAI</span>
-        <span className="font-mono text-xs font-semibold text-sky-400 ml-0.5">.net</span>
+        <span className="font-extrabold text-white tracking-tight">MeckAI</span>
+        <span className="font-mono text-xs font-bold text-red-500 ml-0.5">.net</span>
       </div>
     </div>
   );
