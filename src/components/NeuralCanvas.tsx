@@ -8,7 +8,7 @@ interface Point {
   radius: number;
   baseRadius: number;
   alpha: number;
-  isRed: boolean;
+  colorType: 'red' | 'white' | 'blue';
 }
 
 export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -32,20 +32,22 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
 
     window.addEventListener('resize', handleResize);
 
-    const particleCount = Math.min(Math.floor((width * height) / 11000), 70);
+    const particleCount = Math.min(Math.floor((width * height) / 10000), 75);
     const particles: Point[] = [];
+
+    const types: ('red' | 'white' | 'blue')[] = ['red', 'white', 'blue'];
 
     for (let i = 0; i < particleCount; i++) {
       const radius = Math.random() * 2 + 1.2;
       particles.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.4,
-        vy: (Math.random() - 0.5) * 0.4,
+        vx: (Math.random() - 0.5) * 0.35,
+        vy: (Math.random() - 0.5) * 0.35,
         radius,
         baseRadius: radius,
         alpha: Math.random() * 0.45 + 0.35,
-        isRed: i % 6 === 0, // Patriotic crimson accent on 1 out of 6 nodes
+        colorType: types[i % 3], // Red, White, and Blue nodes
       });
     }
 
@@ -71,22 +73,22 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
 
-      // Ambient radial glow in deep navy & red
+      // Deep patriotic radial glow in center
       const gradient = ctx.createRadialGradient(
         width / 2,
         height / 2,
         20,
         width / 2,
         height / 2,
-        width * 0.6
+        width * 0.65
       );
-      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
-      gradient.addColorStop(0.6, 'rgba(239, 68, 68, 0.03)');
-      gradient.addColorStop(1, 'rgba(9, 20, 40, 0)');
+      gradient.addColorStop(0, 'rgba(30, 58, 138, 0.12)');
+      gradient.addColorStop(0.5, 'rgba(185, 28, 28, 0.05)');
+      gradient.addColorStop(1, 'rgba(7, 14, 30, 0)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      // Update and draw particles
+      // Update and draw Red, White, and Blue particles
       for (let i = 0; i < particles.length; i++) {
         const p = particles[i];
         p.x += p.vx;
@@ -95,7 +97,7 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
         if (p.x < 0 || p.x > width) p.vx *= -1;
         if (p.y < 0 || p.y > height) p.vy *= -1;
 
-        // Gentle mouse interaction
+        // Gentle cursor interaction
         const dx = mouseX - p.x;
         const dy = mouseY - p.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
@@ -108,12 +110,16 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
           p.radius = Math.max(p.baseRadius, p.radius - 0.05);
         }
 
-        // Draw node (white/sky or glowing red)
+        // Draw node
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fillStyle = p.isRed
-          ? `rgba(239, 68, 68, ${p.alpha * 1.2})`
-          : `rgba(224, 231, 255, ${p.alpha})`;
+        if (p.colorType === 'red') {
+          ctx.fillStyle = `rgba(239, 68, 68, ${p.alpha * 1.2})`;
+        } else if (p.colorType === 'blue') {
+          ctx.fillStyle = `rgba(96, 165, 250, ${p.alpha})`;
+        } else {
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 1.1})`;
+        }
         ctx.fill();
 
         // Connect nearby nodes
@@ -121,14 +127,19 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
           const p2 = particles[j];
           const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
           if (dist2 < connectionDistance) {
-            const lineAlpha = (1 - dist2 / connectionDistance) * 0.22;
+            const lineAlpha = (1 - dist2 / connectionDistance) * 0.18;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = (p.isRed || p2.isRed)
-              ? `rgba(239, 68, 68, ${lineAlpha * 0.9})`
-              : `rgba(147, 197, 253, ${lineAlpha})`;
-            ctx.lineWidth = 0.8;
+            
+            if (p.colorType === 'red' || p2.colorType === 'red') {
+              ctx.strokeStyle = `rgba(239, 68, 68, ${lineAlpha})`;
+            } else if (p.colorType === 'white' && p2.colorType === 'white') {
+              ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha * 0.8})`;
+            } else {
+              ctx.strokeStyle = `rgba(147, 197, 253, ${lineAlpha})`;
+            }
+            ctx.lineWidth = 0.75;
             ctx.stroke();
           }
         }
