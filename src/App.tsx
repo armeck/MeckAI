@@ -3,11 +3,9 @@ import { Logo } from './components/Logo';
 import { NeuralCanvas } from './components/NeuralCanvas';
 import { BlogList } from './components/BlogList';
 import { BlogPostView } from './components/BlogPostView';
-import { TestimonialsPage } from './components/TestimonialsPage';
 import { ThemeToggle } from './components/ThemeToggle';
 import { ConsultationModal } from './components/ConsultationModal';
 import { BLOG_POSTS } from './data/blogPosts';
-import { TESTIMONIALS } from './data/testimonials';
 import { BlogPost } from './types/blog';
 import { useTheme } from './hooks/useTheme';
 import { 
@@ -21,7 +19,6 @@ import {
   Database,
   FileText,
   Clock,
-  Quote,
   Send,
   Mail,
   User,
@@ -30,7 +27,7 @@ import {
 
 export default function App() {
   const { themeMode, resolvedTheme, setThemeMode } = useTheme();
-  const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post' | 'testimonials'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post'>('home');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isConsultModalOpen, setIsConsultModalOpen] = useState(false);
@@ -62,12 +59,6 @@ export default function App() {
         window.scrollTo(0, 0);
         return;
       }
-      if (hash === '#/testimonials' || hash === '#/case-results') {
-        setCurrentView('testimonials');
-        setSelectedPost(null);
-        window.scrollTo(0, 0);
-        return;
-      }
       setCurrentView('home');
       setSelectedPost(null);
     };
@@ -80,13 +71,6 @@ export default function App() {
   const navigateToBlog = () => {
     window.location.hash = '#/blog';
     setCurrentView('blog');
-    setSelectedPost(null);
-    window.scrollTo(0, 0);
-  };
-
-  const navigateToTestimonials = () => {
-    window.location.hash = '#/testimonials';
-    setCurrentView('testimonials');
     setSelectedPost(null);
     window.scrollTo(0, 0);
   };
@@ -153,17 +137,6 @@ export default function App() {
             </button>
 
             <button
-              onClick={navigateToTestimonials}
-              className={`transition-colors cursor-pointer whitespace-nowrap ${
-                currentView === 'testimonials'
-                  ? 'text-blue-600 dark:text-blue-400 font-semibold'
-                  : 'hover:text-slate-900 dark:hover:text-white'
-              }`}
-            >
-              Client Results
-            </button>
-
-            <button
               onClick={navigateToBlog}
               className={`transition-colors cursor-pointer whitespace-nowrap ${
                 currentView === 'blog' || currentView === 'post'
@@ -192,7 +165,7 @@ export default function App() {
             </button>
           </div>
 
-          {/* Mobile Right Controls: Theme Toggle & Mobile Menu */}
+          {/* Mobile Right Controls: Compact Theme Toggle & Hamburger */}
           <div className="flex md:hidden items-center gap-2">
             <ThemeToggle
               themeMode={themeMode}
@@ -203,27 +176,20 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              className="p-2 rounded-lg text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               aria-label="Toggle navigation menu"
-              className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
+
         </div>
+      </header>
 
-        {/* Mobile Dropdown Drawer */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-[#090e1a] px-4 py-4 space-y-2 shadow-xl animate-in slide-in-from-top-2 duration-150">
-            <button
-              onClick={() => {
-                navigateToHome();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left p-2.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer"
-            >
-              Home &amp; Overview
-            </button>
-
+      {/* Mobile Navigation Drawer */}
+      {mobileMenuOpen && (
+        <div className="md:hidden border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-[#090e1c] px-4 py-4 space-y-3 animate-in slide-in-from-top-2">
+          <nav className="flex flex-col space-y-2">
             <button
               onClick={() => {
                 scrollToSection('approach');
@@ -231,7 +197,7 @@ export default function App() {
               }}
               className="w-full text-left p-2.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer"
             >
-              Our Approach &amp; Methodology
+              Our Approach &amp; Process
             </button>
 
             <button
@@ -242,16 +208,6 @@ export default function App() {
               className="w-full text-left p-2.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer"
             >
               Custom Pipeline Types
-            </button>
-
-            <button
-              onClick={() => {
-                navigateToTestimonials();
-                setMobileMenuOpen(false);
-              }}
-              className="w-full text-left p-2.5 rounded-lg text-xs font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/80 cursor-pointer"
-            >
-              Client Results &amp; Endorsements
             </button>
 
             <button
@@ -276,225 +232,166 @@ export default function App() {
                 Schedule Consultation
               </button>
             </div>
-          </div>
-        )}
-      </header>
+          </nav>
+        </div>
+      )}
 
       {/* Main View Router */}
-      <main className="flex-1 flex flex-col justify-center">
-        
-        {/* VIEW 1: HOME PAGE */}
+      <main className="flex-1">
+
+        {/* VIEW 1: HOMEPAGE */}
         {currentView === 'home' && (
           <div>
             
-            {/* Hero Section */}
-            <section className="relative pt-16 pb-20 md:pt-24 md:pb-28 overflow-hidden border-b border-slate-200/80 dark:border-slate-800/80">
-              
-              {/* Subtle Animated Node/Pipeline Canvas Background */}
-              <div className="absolute inset-0 opacity-40 dark:opacity-30 pointer-events-none">
-                <NeuralCanvas />
-              </div>
+            {/* HERO SECTION */}
+            <section className="relative overflow-hidden border-b border-slate-200 dark:border-slate-800 py-20 sm:py-28 md:py-32">
+              <NeuralCanvas />
 
-              {/* Ambient Radial Accent */}
-              <div 
-                className="pointer-events-none absolute -top-24 left-1/2 -translate-x-1/2 w-[650px] h-[350px] bg-blue-500/10 dark:bg-blue-600/10 blur-[130px] rounded-full"
-                aria-hidden="true" 
-              />
-
-              <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-6 z-10">
+              <div className="relative z-10 mx-auto max-w-4xl px-4 sm:px-6 text-center">
                 
-                {/* Quiet Kicker */}
-                <div className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400">
-                  <span className="font-semibold text-blue-600 dark:text-blue-400">MECK PIPELINE CONSULTING</span>
-                  <span aria-hidden="true">·</span>
-                  <span>DISCOVERY FIRST, CODE SECOND</span>
+                {/* Clean, Subtle Badge */}
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-900/60 bg-blue-50/80 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-medium mb-6 backdrop-blur-xs">
+                  <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
+                  <span>Custom Pipeline Architecture &amp; Data Engineering Consulting</span>
                 </div>
 
-                {/* Display Headline */}
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12] [text-wrap:balance]">
-                  Custom Data &amp; AI Pipelines Built Around How Your Business Actually Works.
+                  We Investigate Your Workflows &amp; Engineer Custom Automation Pipelines
                 </h1>
 
-                {/* Value Proposition */}
-                <p className="max-w-2xl mx-auto text-base sm:text-lg text-slate-600 dark:text-slate-300 leading-relaxed font-normal">
-                  You know your operational workflows need modernization, but off-the-shelf software doesn't fit your business. 
-                  We embed with your team, shadow your processes, uncover where time is lost, and engineer custom, production-grade pipelines to solve it.
+                <p className="mt-6 text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed">
+                  Most organizations know they have bottlenecks, but don't know the exact data pipelines, integrations, or AI tooling required. We embed with your team, audit your manual processes, and build bespoke pipelines that eliminate the friction.
                 </p>
 
-                {/* Primary Hero Actions */}
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
+                {/* Primary Calls to Action */}
+                <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
                   <button
                     type="button"
                     onClick={() => setIsConsultModalOpen(true)}
-                    className="w-full sm:w-auto h-12 px-7 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold tracking-wide transition-all shadow-sm hover:shadow-md cursor-pointer flex items-center justify-center gap-2"
                   >
-                    <span>Schedule a Consultation</span>
+                    <span>Schedule Process Consultation</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
 
                   <button
                     type="button"
                     onClick={() => scrollToSection('approach')}
-                    className="w-full sm:w-auto h-12 px-6 rounded-lg border border-slate-300 dark:border-slate-700 bg-white/80 dark:bg-slate-900/80 hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs sm:text-sm font-semibold transition-all cursor-pointer"
+                    className="w-full sm:w-auto px-6 py-3.5 rounded-lg border border-slate-300 dark:border-slate-700 hover:bg-slate-100 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300 text-sm font-medium transition-colors cursor-pointer"
                   >
-                    How We Investigate
+                    Explore Our Approach
                   </button>
                 </div>
 
-                {/* Trust Signifiers */}
-                <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 dark:text-slate-400">
-                  <span>Zero Off-the-Shelf Compromises</span>
-                  <span aria-hidden="true">·</span>
-                  <span>Direct Integration with Your Existing Tools</span>
-                  <span aria-hidden="true">·</span>
-                  <span>Your Team Owns the Code</span>
+                {/* Bullet Proof Points */}
+                <div className="mt-12 pt-8 border-t border-slate-200/60 dark:border-slate-800/60 grid grid-cols-1 sm:grid-cols-3 gap-6 text-left">
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">Discovery First</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">We observe real daily friction before writing a single line of pipeline code.</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">Zero Vendor Lock-In</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Built on open standards and your existing cloud infrastructure; you own 100% of the code.</div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-start gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <div>
+                      <div className="text-xs font-semibold text-slate-900 dark:text-white">Hands-On Handover</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">Complete observability, runbooks, and staff training so your team operates with confidence.</div>
+                    </div>
+                  </div>
                 </div>
 
               </div>
             </section>
 
-            {/* Metric & Proof Strip */}
-            <section className="border-b border-slate-200 dark:border-slate-800 bg-slate-50/70 dark:bg-slate-900/40 py-8">
-              <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-y md:divide-y-0 md:divide-x divide-slate-200 dark:divide-slate-800">
-                  <div className="pt-3 md:pt-0">
-                    <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tabular-nums">
-                      100%
-                    </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Custom-Engineered Architecture
-                    </div>
-                  </div>
-                  <div className="pt-3 md:pt-0">
-                    <div className="text-2xl sm:text-3xl font-extrabold text-blue-600 dark:text-blue-400 font-mono tabular-nums">
-                      20+ hrs
-                    </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      Avg. Weekly Operator Time Saved
-                    </div>
-                  </div>
-                  <div className="pt-3 md:pt-0">
-                    <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tabular-nums">
-                      30 Days
-                    </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      From Discovery to Production Pilot
-                    </div>
-                  </div>
-                  <div className="pt-3 md:pt-0">
-                    <div className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white font-mono tabular-nums">
-                      0 Seats
-                    </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      No Per-Seat SaaS License Fees
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 2: OUR 4-STEP METHODOLOGY */}
+            {/* SECTION 1: HOW WE WORK (OUR 3-STEP CONSULTING METHODOLOGY) */}
             <section id="approach" className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800">
               <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 
-                <div className="max-w-2xl mb-14 space-y-3">
-                  <div className="text-xs font-mono font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                    CONSULTING FRAMEWORK
+                <div className="text-center space-y-3 mb-16">
+                  <div className="text-xs font-mono uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold">
+                    CONSULTING METHODOLOGY
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    You Don’t Need to Know What to Build. That’s Our Job.
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white [text-wrap:balance]">
+                    You Don't Need to Know What to Build. That's Our Job.
                   </h2>
-                  <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Most companies know they have friction, but don’t have the time or specialized data engineers 
-                    to diagnose the root causes. Here is how our team investigates and builds your solution:
+                  <p className="max-w-2xl mx-auto text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Most companies buy off-the-shelf software and force their operations into awkward molds. We work in reverse: starting with the human reality of your operations.
                   </p>
                 </div>
 
-                {/* 4 Methodology Cards */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                   
                   {/* Step 1 */}
-                  <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4 shadow-xs flex flex-col justify-between">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-                          <Search className="h-5 w-5" />
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-400">01</span>
+                  <div className="relative p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+                        01
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                        Investigate &amp; Shadow
-                      </h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        We sit with your daily operators, observe how tasks actually get executed, and map every manual spreadsheet handoff, PDF extraction, and system bottleneck.
-                      </p>
+                      <Search className="h-5 w-5 text-slate-400" />
                     </div>
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] font-mono text-blue-600 dark:text-blue-400">
-                      Deliverable: Friction &amp; Workflow Map
-                    </div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+                      Deep Workflow Investigation
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      We shadow your key team members, trace paper trails, inspect manual spreadsheets, and identify invisible failure points where data gets lost or hand-keyed repeatedly.
+                    </p>
+                    <ul className="text-[11px] text-slate-500 dark:text-slate-400 space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                      <li>· Staff workflow interviews</li>
+                      <li>· Data provenance mapping</li>
+                      <li>· Latency and error root-cause diagnosis</li>
+                    </ul>
                   </div>
 
                   {/* Step 2 */}
-                  <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4 shadow-xs flex flex-col justify-between">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-                          <Workflow className="h-5 w-5" />
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-400">02</span>
+                  <div className="relative p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+                        02
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                        Map &amp; Blueprint
-                      </h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        We translate fuzzy operational pain into an exact pipeline architecture: data schemas, ingestion queues, automated validation logic, and destination sinks.
-                      </p>
+                      <Workflow className="h-5 w-5 text-slate-400" />
                     </div>
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] font-mono text-blue-600 dark:text-blue-400">
-                      Deliverable: Pipeline Technical Spec
-                    </div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+                      Architecture &amp; Bespoke Engineering
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      We architect and build tailored ETL, streaming, or AI parsing pipelines suited specifically to your schemas, APIs, and edge cases. No generic bloat.
+                    </p>
+                    <ul className="text-[11px] text-slate-500 dark:text-slate-400 space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                      <li>· Resilient retry &amp; error isolation</li>
+                      <li>· Custom schema validation rules</li>
+                      <li>· AI enrichment &amp; multimodal extractors</li>
+                    </ul>
                   </div>
 
                   {/* Step 3 */}
-                  <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4 shadow-xs flex flex-col justify-between">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-                          <Cpu className="h-5 w-5" />
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-400">03</span>
+                  <div className="relative p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/40 space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="h-10 w-10 rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-sm">
+                        03
                       </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                        Custom Engineering
-                      </h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        We write clean, robust code for your custom pipeline—handling messy real-world edge cases, unstructured files, rate limits, and fallback verification queues.
-                      </p>
+                      <Cpu className="h-5 w-5 text-slate-400" />
                     </div>
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] font-mono text-blue-600 dark:text-blue-400">
-                      Deliverable: Tested Production Pipeline
-                    </div>
-                  </div>
-
-                  {/* Step 4 */}
-                  <div className="p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/50 space-y-4 shadow-xs flex flex-col justify-between">
-                    <div className="space-y-3">
-                      <div className="flex items-center justify-between">
-                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 dark:bg-blue-950/60 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-900">
-                          <CheckCircle2 className="h-5 w-5" />
-                        </div>
-                        <span className="text-xs font-mono font-bold text-slate-400">04</span>
-                      </div>
-                      <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                        Deploy &amp; Handover
-                      </h3>
-                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                        We deploy into your infrastructure, run a parallel shadow test with live staff, train your team, and provide full documentation. You own all IP.
-                      </p>
-                    </div>
-                    <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 text-[11px] font-mono text-blue-600 dark:text-blue-400">
-                      Deliverable: Zero-Lock-In Handover
-                    </div>
+                    <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight">
+                      Deployment, Knowledge Transfer &amp; Handover
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      We deploy cleanly into your cloud environment, configure telemetry alerts, write comprehensive runbooks, and train your staff to operate it seamlessly.
+                    </p>
+                    <ul className="text-[11px] text-slate-500 dark:text-slate-400 space-y-1.5 pt-2 border-t border-slate-200/60 dark:border-slate-800/60">
+                      <li>· Infrastructure-as-code deployment</li>
+                      <li>· Observability dashboards &amp; alerts</li>
+                      <li>· Engineering documentation &amp; training</li>
+                    </ul>
                   </div>
 
                 </div>
@@ -502,61 +399,156 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION 3: CAPABILITIES / PIPELINE TYPES */}
+            {/* SECTION 2: WHY CUSTOM PIPELINES (THE CORE ADVANTAGE) */}
+            <section className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 bg-slate-50/40 dark:bg-slate-900/20">
+              <div className="mx-auto max-w-6xl px-4 sm:px-6">
+                
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                  
+                  <div className="lg:col-span-5 space-y-4">
+                    <div className="text-xs font-mono uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold">
+                      THE CUSTOM ADVANTAGE
+                    </div>
+                    <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900 dark:text-white [text-wrap:balance]">
+                      SaaS Tools Force You to Change Your Process. Custom Pipelines Adapt to You.
+                    </h2>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      Pre-packaged integration platforms charge exorbitant per-task fees, lock your data into proprietary connectors, and break whenever an edge case hits. 
+                    </p>
+                    <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                      We design lean, bulletproof pipelines built on robust modern foundations (Postgres, Python, Node, DuckDB, modern LLMs) that run in your own VPC with zero licensing surprises.
+                    </p>
+
+                    <div className="pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setIsConsultModalOpen(true)}
+                        className="inline-flex items-center gap-2 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 cursor-pointer"
+                      >
+                        <span>Discuss your company's operational bottlenecks</span>
+                        <ArrowRight className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    
+                    <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 space-y-2">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">
+                        Tailored to Messy Reality
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Handles malformed CSVs, non-standard ERP exports, scanned physical bills of lading, and inconsistent naming conventions without breaking downstream systems.
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 space-y-2">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">
+                        Complete Code Ownership
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        You retain full intellectual property and source code access. No subscription fees to keep your own operations running.
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 space-y-2">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">
+                        Measured in Reclaimed Hours
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        We don't optimize for vanity metrics. We measure success by how many hours of manual data entry and triage your staff never has to do again.
+                      </p>
+                    </div>
+
+                    <div className="p-5 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 space-y-2">
+                      <div className="text-xs font-bold text-slate-900 dark:text-white">
+                        Transparent, Milestone-Based
+                      </div>
+                      <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                        Because every company’s operational architecture is unique, we scope projects based on verified discovery milestones rather than guesswork.
+                      </p>
+                    </div>
+
+                  </div>
+
+                </div>
+
+              </div>
+            </section>
+
+            {/* SECTION 3: PIPELINE ARCHITECTURES & TYPES */}
             <section id="capabilities" className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800">
               <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 
-                <div className="max-w-2xl mb-12 space-y-3">
-                  <div className="text-xs font-mono font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                <div className="text-center space-y-3 mb-14">
+                  <div className="text-xs font-mono uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold">
                     PIPELINE ARCHITECTURES
                   </div>
-                  <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900 dark:text-white">
-                    Pipelines Tailored to Your Specific Data Types
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white [text-wrap:balance]">
+                    Examples of Custom Pipelines We Architect
                   </h2>
-                  <p className="text-base text-slate-600 dark:text-slate-300 leading-relaxed">
-                    Every company has a different data reality. We engineer pipelines around your existing files, systems, and hardware.
+                  <p className="max-w-2xl mx-auto text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    Every engagement is bespoke, but these are typical operational architectures we design and implement for clients:
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   
-                  {/* Pipeline Type 1 */}
+                  {/* Category 1 */}
                   <div className="p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 shadow-xs">
                     <div className="h-10 w-10 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <FileText className="h-5 w-5" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Unstructured Document &amp; Invoicing Pipelines
+                      Document &amp; Unstructured Data Ingestion
                     </h3>
                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Custom document parsers that extract line items, PO numbers, dates, and contracts from messy multi-page PDFs, emails, and scans with 95%+ touchless accuracy.
+                      For teams receiving hundreds of invoices, PDFs, compliance records, or contracts. Automatically parses unstructured documents into validated database entries.
                     </p>
                     <ul className="pt-2 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
-                      <li>· Variable vendor invoice reconciliation</li>
-                      <li>· Commercial lease and contract abstraction</li>
-                      <li>· Medical chart and prior-authorization extraction</li>
+                      <li>· Optical OCR and vision LLM layout extraction</li>
+                      <li>· Automated cross-referencing with master purchase orders</li>
+                      <li>· Discrepancy flagging before data enters the accounting ledger</li>
                     </ul>
                   </div>
 
-                  {/* Pipeline Type 2 */}
+                  {/* Category 2 */}
                   <div className="p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 shadow-xs">
                     <div className="h-10 w-10 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <Database className="h-5 w-5" />
                     </div>
                     <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                      Disparate System &amp; Spreadsheet Harmonization
+                      Cross-System ERP, CRM &amp; Legacy Database Sync
                     </h3>
                     <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                      Eliminate fragile daily spreadsheet routines. We build robust ETL pipelines that continuously ingest, clean, and sync data between incompatible software tools.
+                      For businesses stuck between old on-premises software and modern cloud apps. Bidirectional sync with transactional guarantees and conflict resolution.
                     </p>
                     <ul className="pt-2 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
-                      <li>· Multi-branch inventory &amp; order syncing</li>
-                      <li>· Legacy SQL database to modern cloud views</li>
-                      <li>· Automated daily accounting ledger reconciliation</li>
+                      <li>· Change-data-capture (CDC) listeners on legacy DBs</li>
+                      <li>· Idempotent webhook delivery with automated replay</li>
+                      <li>· Deduplication across fragmented customer profiles</li>
                     </ul>
                   </div>
 
-                  {/* Pipeline Type 3 */}
+                  {/* Category 3 */}
+                  <div className="p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 shadow-xs">
+                    <div className="h-10 w-10 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                      <Workflow className="h-5 w-5" />
+                    </div>
+                    <h3 className="text-lg font-bold text-slate-900 dark:text-white tracking-tight">
+                      Human-in-the-Loop Review &amp; AI Decision Augmentation
+                    </h3>
+                    <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
+                      For high-stakes workflows where 100% full automation is too risky. Pipelines automatically handle standard cases and route anomalies to an intuitive review queue.
+                    </p>
+                    <ul className="pt-2 border-t border-slate-100 dark:border-slate-800/80 text-[11px] text-slate-500 dark:text-slate-400 space-y-1">
+                      <li>· Confidence score threshold routing</li>
+                      <li>· Lightweight one-click human approval UI</li>
+                      <li>· Continuous feedback loop to train custom heuristics</li>
+                    </ul>
+                  </div>
+
+                  {/* Category 4 */}
                   <div className="p-7 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 space-y-4 shadow-xs">
                     <div className="h-10 w-10 rounded-lg bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 flex items-center justify-center">
                       <Clock className="h-5 w-5" />
@@ -579,34 +571,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION 4: CLIENT QUOTE SPOTLIGHT */}
-            <section className="py-16 md:py-20 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#070d1a]/40">
-              <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-6">
-                <Quote className="h-8 w-8 text-blue-600 dark:text-blue-400 mx-auto opacity-70" />
-                <blockquote className="text-lg sm:text-xl md:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-relaxed italic">
-                  "{TESTIMONIALS[0].quote}"
-                </blockquote>
-                <div>
-                  <div className="font-bold text-slate-900 dark:text-white">
-                    {TESTIMONIALS[0].name}
-                  </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400">
-                    {TESTIMONIALS[0].role} · {TESTIMONIALS[0].company}
-                  </div>
-                </div>
-                <div className="pt-2">
-                  <button
-                    onClick={navigateToTestimonials}
-                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>Read all client endorsements and operational outcomes</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              </div>
-            </section>
-
-            {/* SECTION 5: CLEAN CONSULTATION & CONTACT FORM */}
+            {/* SECTION 4: CLEAN CONSULTATION & CONTACT FORM */}
             <section id="contact" className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800">
               <div className="mx-auto max-w-3xl px-4 sm:px-6">
                 
@@ -759,14 +724,6 @@ export default function App() {
           />
         )}
 
-        {/* VIEW 4: TESTIMONIALS / CLIENT RESULTS */}
-        {currentView === 'testimonials' && (
-          <TestimonialsPage
-            onGoHome={navigateToHome}
-            onRequestAudit={() => setIsConsultModalOpen(true)}
-          />
-        )}
-
       </main>
 
       {/* Modern, Clean Minimalist Footer */}
@@ -790,11 +747,11 @@ export default function App() {
             <button onClick={() => scrollToSection('capabilities')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
               Pipeline Types
             </button>
-            <button onClick={navigateToTestimonials} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
-              Client Results
-            </button>
             <button onClick={navigateToBlog} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
               Engineering Insights
+            </button>
+            <button onClick={() => scrollToSection('contact')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
+              Contact
             </button>
             <span className="text-slate-300 dark:text-slate-700">·</span>
             <span>&copy; {new Date().getFullYear()} Meck Systems Consulting LLC. All rights reserved.</span>
