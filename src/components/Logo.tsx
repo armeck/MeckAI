@@ -27,12 +27,12 @@ export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
         </svg>
       </div>
 
-      <div className="flex items-baseline gap-1.5 leading-none">
-        <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+      <div className="flex items-baseline leading-none">
+        <span className="font-bold text-xl tracking-tight text-slate-900 dark:text-white">
           Meck
         </span>
-        <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
-          Pipelines
+        <span className="font-extrabold text-xl tracking-tight text-blue-600 dark:text-blue-400">
+          AI
         </span>
       </div>
     </div>

@@ -252,7 +252,7 @@ export default function App() {
                 {/* Clean, Subtle Badge */}
                 <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-200 dark:border-blue-900/60 bg-blue-50/80 dark:bg-blue-950/40 text-blue-700 dark:text-blue-300 text-xs font-medium mb-6 backdrop-blur-xs">
                   <span className="h-1.5 w-1.5 rounded-full bg-blue-500 animate-pulse" />
-                  <span>Custom Pipeline Architecture &amp; Data Engineering Consulting</span>
+                  <span>MeckAI · Custom Automation Pipelines &amp; Workflow Consulting</span>
                 </div>
 
                 <h1 className="text-3xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-slate-900 dark:text-white leading-[1.12] [text-wrap:balance]">
@@ -731,10 +731,10 @@ export default function App() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span onClick={navigateToHome} className="text-slate-900 dark:text-white font-bold tracking-tight cursor-pointer">
-              Meck Pipeline Consulting
+              MeckAI
             </span>
             <span className="text-slate-300 dark:text-slate-700">|</span>
-            <span className="text-[11px] text-slate-500 dark:text-slate-400">Custom Data &amp; AI Engineering</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">Custom Automation Pipelines &amp; Systems Consulting</span>
           </div>
 
           <div className="flex flex-wrap items-center gap-6 text-[11px]">
@@ -754,7 +754,7 @@ export default function App() {
               Contact
             </button>
             <span className="text-slate-300 dark:text-slate-700">·</span>
-            <span>&copy; {new Date().getFullYear()} Meck Systems Consulting LLC. All rights reserved.</span>
+            <span>&copy; {new Date().getFullYear()} MeckAI LLC. All rights reserved.</span>
           </div>
         </div>
       </footer>

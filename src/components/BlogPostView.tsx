@@ -127,7 +127,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
             onClick={onGoHome}
             className="text-xs font-mono text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
           >
-            &larr; Back to Meck Consulting
+            &larr; Back to MeckAI
           </button>
 
           <div

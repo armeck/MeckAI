@@ -30,9 +30,9 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
           <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-slate-400">
             <button
               onClick={onGoHome}
-              className="hover:text-slate-900 dark:hover:text-white hover:underline cursor-pointer transition-colors"
+              className="hover:text-slate-900 dark:hover:text-white hover:underline cursor-pointer transition-colors font-semibold"
             >
-              Meck Pipelines
+              MeckAI
             </button>
             <ChevronRight className="h-3.5 w-3.5 text-slate-400 dark:text-slate-600" />
             <span className="text-blue-600 dark:text-blue-400 font-semibold">Engineering Insights</span>
@@ -42,7 +42,7 @@ export const BlogList: React.FC<BlogListProps> = ({ onSelectPost, onGoHome }) =>
             onClick={onGoHome}
             className="text-xs font-mono text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer"
           >
-            &larr; Back to Services
+            &larr; Back to MeckAI
           </button>
         </div>
 
