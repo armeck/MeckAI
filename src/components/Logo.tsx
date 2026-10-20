@@ -7,34 +7,32 @@ interface LogoProps {
 
 export const Logo: React.FC<LogoProps> = ({ className = '', size = 'md' }) => {
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Sleek Sovereign Tech Shield / Chevron Emblem */}
-      <div className="relative flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-gradient-to-b from-[#0f224a] to-[#07132b] border border-blue-800/80 shadow-[0_0_12px_rgba(30,58,138,0.35)]">
+    <div className={`flex items-center gap-2.5 select-none ${className}`}>
+      {/* Modern Pipeline Architecture Mark */}
+      <div className="relative flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-900 dark:bg-blue-600 text-white shadow-xs">
         <svg
           viewBox="0 0 24 24"
           fill="none"
-          className="w-5 h-5 text-white"
-          strokeWidth="2"
+          className="w-5 h-5"
+          stroke="currentColor"
+          strokeWidth="2.2"
           strokeLinecap="round"
           strokeLinejoin="round"
         >
-          {/* Subtle shield chevron with central star */}
-          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" fill="rgba(30, 58, 138, 0.4)" />
-          <polygon points="12 7 13.2 9.8 16 10.1 13.9 12 14.5 14.8 12 13.3 9.5 14.8 10.1 12 8 10.1 10.8 9.8 12 7" fill="#dc2626" stroke="#ffffff" strokeWidth="0.5" />
+          {/* Continuous pipeline flow with branching nodes */}
+          <path d="M4 17h6a2 2 0 0 0 2-2V9a2 2 0 0 1 2-2h6" />
+          <circle cx="4" cy="17" r="2" fill="currentColor" />
+          <circle cx="20" cy="7" r="2" fill="currentColor" />
+          <path d="M12 15l2 2 4-4" strokeWidth="2" />
         </svg>
       </div>
 
-      <div className="flex flex-col leading-tight">
-        <div className="flex items-baseline gap-1">
-          <span className="font-extrabold text-xl tracking-tight text-white">
-            Meck<span className="text-red-500">AI</span>
-          </span>
-          <span className="font-mono text-xs font-semibold text-slate-400">
-            .net
-          </span>
-        </div>
-        <span className="hidden sm:block text-[10px] font-mono tracking-wider text-slate-400 uppercase">
-          Sovereign Intelligence
+      <div className="flex items-baseline gap-1.5 leading-none">
+        <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">
+          Meck
+        </span>
+        <span className="text-xs font-semibold tracking-wider uppercase text-blue-600 dark:text-blue-400">
+          Pipelines
         </span>
       </div>
     </div>

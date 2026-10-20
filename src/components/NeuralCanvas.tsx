@@ -1,14 +1,12 @@
 import React, { useEffect, useRef } from 'react';
 
-interface Point {
+interface PipelineNode {
   x: number;
   y: number;
   vx: number;
   vy: number;
   radius: number;
-  baseRadius: number;
-  alpha: number;
-  colorType: 'red' | 'white' | 'blue';
+  pulseOffset: number;
 }
 
 export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' }) => {
@@ -32,22 +30,17 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
 
     window.addEventListener('resize', handleResize);
 
-    const particleCount = Math.min(Math.floor((width * height) / 11000), 70);
-    const particles: Point[] = [];
+    const nodeCount = Math.min(Math.floor((width * height) / 18000), 45);
+    const nodes: PipelineNode[] = [];
 
-    const types: ('red' | 'white' | 'blue')[] = ['red', 'white', 'blue'];
-
-    for (let i = 0; i < particleCount; i++) {
-      const radius = Math.random() * 2 + 1.2;
-      particles.push({
+    for (let i = 0; i < nodeCount; i++) {
+      nodes.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.35,
-        vy: (Math.random() - 0.5) * 0.35,
-        radius,
-        baseRadius: radius,
-        alpha: Math.random() * 0.45 + 0.35,
-        colorType: types[i % 3],
+        vx: (Math.random() - 0.5) * 0.3,
+        vy: (Math.random() - 0.5) * 0.3,
+        radius: Math.random() * 2 + 1.8,
+        pulseOffset: Math.random() * Math.PI * 2,
       });
     }
 
@@ -68,76 +61,67 @@ export const NeuralCanvas: React.FC<{ className?: string }> = ({ className = '' 
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('mouseleave', handleMouseLeave);
 
-    const connectionDistance = 140;
+    const connectionDistance = 160;
+    let step = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
+      step += 0.02;
 
-      // Deep patriotic radial glow
-      const gradient = ctx.createRadialGradient(
-        width / 2,
-        height / 2,
-        20,
-        width / 2,
-        height / 2,
-        width * 0.6
-      );
-      gradient.addColorStop(0, 'rgba(59, 130, 246, 0.08)');
-      gradient.addColorStop(0.6, 'rgba(239, 68, 68, 0.03)');
-      gradient.addColorStop(1, 'rgba(7, 14, 30, 0)');
-      ctx.fillStyle = gradient;
-      ctx.fillRect(0, 0, width, height);
+      const isDark = document.documentElement.classList.contains('dark');
 
-      // Draw particles
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
-        p.x += p.vx;
-        p.y += p.vy;
+      // Draw connections
+      for (let i = 0; i < nodes.length; i++) {
+        const n1 = nodes[i];
+        n1.x += n1.vx;
+        n1.y += n1.vy;
 
-        if (p.x < 0 || p.x > width) p.vx *= -1;
-        if (p.y < 0 || p.y > height) p.vy *= -1;
+        if (n1.x < 0 || n1.x > width) n1.vx *= -1;
+        if (n1.y < 0 || n1.y > height) n1.vy *= -1;
 
-        const dx = mouseX - p.x;
-        const dy = mouseY - p.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          const force = (120 - dist) / 120;
-          p.x -= (dx / dist) * force * 1.5;
-          p.y -= (dy / dist) * force * 1.5;
-          p.radius = p.baseRadius + force * 1.6;
-        } else {
-          p.radius = Math.max(p.baseRadius, p.radius - 0.05);
+        // Subtle mouse push
+        const dx = mouseX - n1.x;
+        const dy = mouseY - n1.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 100) {
+          const force = (100 - dist) / 100;
+          n1.x -= (dx / dist) * force * 1.2;
+          n1.y -= (dy / dist) * force * 1.2;
         }
 
+        // Draw node
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        if (p.colorType === 'red') {
-          ctx.fillStyle = `rgba(239, 68, 68, ${p.alpha * 1.2})`;
-        } else if (p.colorType === 'blue') {
-          ctx.fillStyle = `rgba(96, 165, 250, ${p.alpha})`;
-        } else {
-          ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha * 1.1})`;
-        }
+        ctx.arc(n1.x, n1.y, n1.radius, 0, Math.PI * 2);
+        ctx.fillStyle = isDark
+          ? 'rgba(96, 165, 250, 0.7)'
+          : 'rgba(37, 99, 235, 0.6)';
         ctx.fill();
 
-        for (let j = i + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dist2 = Math.hypot(p.x - p2.x, p.y - p2.y);
-          if (dist2 < connectionDistance) {
-            const lineAlpha = (1 - dist2 / connectionDistance) * 0.22;
+        for (let j = i + 1; j < nodes.length; j++) {
+          const n2 = nodes[j];
+          const d = Math.hypot(n1.x - n2.x, n1.y - n2.y);
+          if (d < connectionDistance) {
+            const alpha = (1 - d / connectionDistance);
             ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            
-            if (p.colorType === 'red' || p2.colorType === 'red') {
-              ctx.strokeStyle = `rgba(239, 68, 68, ${lineAlpha})`;
-            } else if (p.colorType === 'white' && p2.colorType === 'white') {
-              ctx.strokeStyle = `rgba(255, 255, 255, ${lineAlpha * 0.8})`;
-            } else {
-              ctx.strokeStyle = `rgba(147, 197, 253, ${lineAlpha})`;
-            }
-            ctx.lineWidth = 0.8;
+            ctx.moveTo(n1.x, n1.y);
+            ctx.lineTo(n2.x, n2.y);
+            ctx.strokeStyle = isDark
+              ? `rgba(147, 197, 253, ${alpha * 0.18})`
+              : `rgba(37, 99, 235, ${alpha * 0.12})`;
+            ctx.lineWidth = 1;
             ctx.stroke();
+
+            // Moving data pulse along line
+            const pulsePos = (Math.sin(step + n1.pulseOffset) + 1) / 2;
+            const px = n1.x + (n2.x - n1.x) * pulsePos;
+            const py = n1.y + (n2.y - n1.y) * pulsePos;
+
+            ctx.beginPath();
+            ctx.arc(px, py, 1.2, 0, Math.PI * 2);
+            ctx.fillStyle = isDark
+              ? `rgba(191, 219, 254, ${alpha * 0.6})`
+              : `rgba(30, 64, 175, ${alpha * 0.5})`;
+            ctx.fill();
           }
         }
       }

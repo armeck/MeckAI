@@ -1,111 +1,138 @@
 import React from 'react';
 
 interface BlogIllustrationProps {
-  type: 'cooling' | 'vectors' | 'datacenter' | 'generator' | 'almanac' | 'privacy';
+  type: 'discovery' | 'architecture' | 'engineering' | 'integration' | 'governance';
   className?: string;
 }
 
 export const BlogIllustration: React.FC<BlogIllustrationProps> = ({ type, className = '' }) => {
   return (
-    <div className={`relative overflow-hidden rounded-xl border border-blue-900/60 bg-gradient-to-b from-[#0e1d42] to-[#070e1e] flex items-center justify-center ${className}`}>
-      <div className="absolute inset-0 bg-grid-subtle opacity-40 pointer-events-none" />
+    <div className={`relative overflow-hidden rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 p-6 flex flex-col justify-between ${className}`}>
+      
+      {/* Background Grid Pattern */}
+      <div className="absolute inset-0 opacity-40 dark:opacity-20 pointer-events-none bg-grid-subtle-light dark:bg-grid-subtle-dark" />
 
-      {type === 'cooling' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-blue-400">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <path d="M50 140 Q 120 60, 200 120 T 350 70" fill="none" stroke="#38bdf8" strokeWidth="3" strokeDasharray="6 3" />
-          <path d="M50 165 Q 130 100, 210 150 T 350 110" fill="none" stroke="#2563eb" strokeWidth="2.5" />
-          <line x1="200" y1="15" x2="200" y2="195" stroke="#dc2626" strokeWidth="2" strokeDasharray="4 2" />
-          <circle cx="200" cy="120" r="16" fill="#0f224a" stroke="#dc2626" strokeWidth="2" />
-          <text x="200" y="124" fill="#ffffff" fontSize="9" fontFamily="monospace" textAnchor="middle" fontWeight="bold">58°F</text>
-          <text x="50" y="45" fill="#ef4444" fontSize="10" fontFamily="monospace" fontWeight="bold">PERMIAN BASIN WELL #2 [800 FT BOREHOLE]</text>
-          <text x="50" y="65" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">BUC-EE'S ADJACENCY: 0.4 MILES · CALICHE MINERAL DENSITY: OPTIMAL</text>
-          <rect x="235" y="160" width="130" height="30" rx="4" fill="#0f1f42" stroke="#38bdf8" strokeWidth="1" />
-          <text x="300" y="179" fill="#38bdf8" fontSize="8.5" fontFamily="monospace" textAnchor="middle">ZERO COASTAL PERMITTING</text>
-        </svg>
-      )}
+      {/* SVG Pipeline Visualization */}
+      <div className="relative z-10 w-full h-40 flex items-center justify-center">
+        {type === 'discovery' && (
+          <svg viewBox="0 0 400 160" className="w-full h-full text-slate-800 dark:text-slate-200">
+            {/* Step 1: Manual Input */}
+            <rect x="20" y="50" width="80" height="60" rx="8" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="60" y="78" textAnchor="middle" className="text-[11px] font-sans fill-slate-700 dark:fill-slate-300 font-semibold">Operator Work</text>
+            <text x="60" y="94" textAnchor="middle" className="text-[9px] font-mono fill-slate-500 dark:fill-slate-400">Interviews</text>
 
-      {type === 'vectors' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-red-500">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <line x1="50" y1="165" x2="350" y2="165" stroke="#1e293b" strokeWidth="1.5" />
-          <line x1="60" y1="35" x2="60" y2="175" stroke="#1e293b" strokeWidth="1.5" />
-          {/* MeckAI direct path */}
-          <line x1="60" y1="165" x2="340" y2="55" stroke="#dc2626" strokeWidth="3" />
-          <circle cx="340" cy="55" r="5" fill="#dc2626" />
-          <text x="190" y="45" fill="#ef4444" fontSize="9.5" fontFamily="monospace" fontWeight="bold">MECKAI: DIRECT OUTPUT (NO PREAMBLE)</text>
-          {/* Big Tech wavy wandering path */}
-          <path d="M60 165 Q 110 185, 140 135 T 190 175 T 250 115 T 340 85" fill="none" stroke="#64748b" strokeWidth="2" strokeDasharray="4 4" />
-          <circle cx="340" cy="85" r="4" fill="#64748b" />
-          <text x="80" y="195" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">BIG TECH: APOLOGY PREAMBLE TAX (34% TOKENS WASTED ON GUILT)</text>
-        </svg>
-      )}
+            {/* Arrow 1 */}
+            <path d="M100 80h40" stroke="currentColor" strokeWidth="1.5" strokeDasharray="4 2" />
+            <polygon points="140,80 134,76 134,84" fill="currentColor" />
 
-      {type === 'generator' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-amber-500">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <rect x="50" y="50" width="170" height="110" rx="6" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" />
-          <circle cx="295" cy="105" r="45" fill="#0f172a" stroke="#dc2626" strokeWidth="2.5" />
-          <circle cx="295" cy="105" r="22" fill="#1e293b" stroke="#f59e0b" strokeWidth="2" strokeDasharray="6 3" />
-          <line x1="295" y1="60" x2="295" y2="150" stroke="#64748b" strokeWidth="1.5" />
-          <line x1="250" y1="105" x2="340" y2="105" stroke="#64748b" strokeWidth="1.5" />
-          <text x="65" y="80" fill="#f8fafc" fontSize="10.5" fontFamily="monospace" fontWeight="bold">CAT 3516B V16 DIESEL</text>
-          <text x="65" y="100" fill="#f59e0b" fontSize="8.5" fontFamily="monospace">FUEL: 30,000 GAL OFF-ROAD RED</text>
-          <text x="65" y="120" fill="#ef4444" fontSize="8.5" fontFamily="monospace">SWITCHOVER: &lt; 5.4 SECONDS</text>
-          <text x="65" y="140" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">WEATHER SENSITIVITY: 0%</text>
-          <text x="295" y="172" fill="#38bdf8" fontSize="9" fontFamily="monospace" textAnchor="middle">FLYWHEEL: 1,800 RPM</text>
-        </svg>
-      )}
+            {/* Step 2: Investigation & Audit */}
+            <rect x="150" y="35" width="100" height="90" rx="8" className="fill-blue-50 dark:fill-blue-950/40 stroke-blue-500" strokeWidth="1.5" />
+            <text x="200" y="65" textAnchor="middle" className="text-[11px] font-sans fill-blue-600 dark:fill-blue-400 font-bold">Process Audit</text>
+            <text x="200" y="82" textAnchor="middle" className="text-[9px] font-mono fill-slate-600 dark:fill-slate-300">Bottleneck Map</text>
+            <text x="200" y="100" textAnchor="middle" className="text-[8px] font-mono fill-blue-500">Friction Quantified</text>
 
-      {type === 'datacenter' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-blue-500">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <rect x="55" y="45" width="75" height="125" rx="4" fill="#0f172a" stroke="#2563eb" strokeWidth="2" />
-          <rect x="160" y="45" width="75" height="125" rx="4" fill="#0f172a" stroke="#2563eb" strokeWidth="2" />
-          <rect x="265" y="45" width="75" height="125" rx="4" fill="#0f172a" stroke="#2563eb" strokeWidth="2" />
-          {[60, 80, 100, 120, 140].map((y) => (
-            <g key={y}>
-              <line x1="65" y1={y} x2="120" y2={y} stroke="#38bdf8" strokeWidth="1.5" />
-              <line x1="170" y1={y} x2="225" y2={y} stroke="#dc2626" strokeWidth="1.5" />
-              <line x1="275" y1={y} x2="330" y2={y} stroke="#38bdf8" strokeWidth="1.5" />
-            </g>
-          ))}
-          <text x="200" y="193" fill="#ef4444" fontSize="9.5" fontFamily="monospace" textAnchor="middle" fontWeight="bold">
-            COASTAL JURISDICTION: REJECTED AT STATE LINE
-          </text>
-        </svg>
-      )}
+            {/* Arrow 2 */}
+            <path d="M250 80h40" stroke="currentColor" strokeWidth="1.5" />
+            <polygon points="290,80 284,76 284,84" fill="currentColor" />
 
-      {type === 'almanac' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-amber-400">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <rect x="45" y="40" width="130" height="130" fill="#0c1a38" stroke="#38bdf8" strokeWidth="1.5" strokeDasharray="3 3" />
-          <circle cx="110" cy="105" r="32" fill="none" stroke="#f59e0b" strokeWidth="2" />
-          <line x1="80" y1="105" x2="140" y2="105" stroke="#f59e0b" strokeWidth="1.5" />
-          <line x1="110" y1="75" x2="110" y2="135" stroke="#f59e0b" strokeWidth="1.5" />
-          <text x="195" y="65" fill="#ffffff" fontSize="10.5" fontFamily="monospace" fontWeight="bold">100-YEAR HERITAGE CORPUS</text>
-          <text x="195" y="85" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">• 1968 Sears Craftsman Catalog</text>
-          <text x="195" y="105" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">• John Deere Tech Bulletins (1948-96)</text>
-          <text x="195" y="125" fill="#94a3b8" fontSize="8.5" fontFamily="monospace">• Youngstown Metallurgy Tables</text>
-          <text x="195" y="145" fill="#ef4444" fontSize="8.5" fontFamily="monospace">• REDDIT / TIKTOK SCRAPING: 0.00%</text>
-        </svg>
-      )}
+            {/* Step 3: Custom Architecture */}
+            <rect x="300" y="50" width="80" height="60" rx="8" className="fill-white dark:fill-slate-800 stroke-emerald-500" strokeWidth="1.5" />
+            <text x="340" y="78" textAnchor="middle" className="text-[11px] font-sans fill-emerald-600 dark:fill-emerald-400 font-semibold">Pipeline Spec</text>
+            <text x="340" y="94" textAnchor="middle" className="text-[9px] font-mono fill-slate-500 dark:fill-slate-400">Zero Shelfware</text>
+          </svg>
+        )}
 
-      {type === 'privacy' && (
-        <svg viewBox="0 0 400 220" className="w-full h-full max-h-56 p-4 text-emerald-400">
-          <rect x="25" y="15" width="350" height="190" rx="10" fill="#091428" stroke="#1e3a8a" strokeWidth="1.5" />
-          <rect x="135" y="60" width="130" height="95" rx="8" fill="#0f1f42" stroke="#dc2626" strokeWidth="2" />
-          <path d="M165 60 V 40 A 35 35 0 0 1 235 40 V 60" fill="none" stroke="#dc2626" strokeWidth="3" />
-          <circle cx="200" cy="105" r="9" fill="#ef4444" />
-          <line x1="200" y1="114" x2="200" y2="128" stroke="#ef4444" strokeWidth="3" />
-          <text x="200" y="175" fill="#38bdf8" fontSize="9.5" fontFamily="monospace" textAnchor="middle" fontWeight="bold">
-            SILICON-LAYER ZEROIZATION
-          </text>
-          <text x="200" y="195" fill="#94a3b8" fontSize="8.5" fontFamily="monospace" textAnchor="middle">
-            KOMBUCHA-SIPPING CONTRACTOR ACCESS: DENIED
-          </text>
-        </svg>
-      )}
+        {type === 'architecture' && (
+          <svg viewBox="0 0 400 160" className="w-full h-full text-slate-800 dark:text-slate-200">
+            {/* Multi Source Ingestion */}
+            <rect x="25" y="25" width="75" height="32" rx="6" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="62" y="45" textAnchor="middle" className="text-[10px] font-sans fill-slate-600 dark:fill-slate-300">Spreadsheets</text>
+
+            <rect x="25" y="65" width="75" height="32" rx="6" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="62" y="85" textAnchor="middle" className="text-[10px] font-sans fill-slate-600 dark:fill-slate-300">Vendor PDFs</text>
+
+            <rect x="25" y="105" width="75" height="32" rx="6" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="62" y="125" textAnchor="middle" className="text-[10px] font-sans fill-slate-600 dark:fill-slate-300">Legacy ERP</text>
+
+            {/* Convergence to Queue */}
+            <path d="M100 41h40v30h30" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M100 81h70" fill="none" stroke="currentColor" strokeWidth="1.5" />
+            <path d="M100 121h40v-30h30" fill="none" stroke="currentColor" strokeWidth="1.5" />
+
+            {/* Central Normalization Engine */}
+            <rect x="180" y="45" width="110" height="70" rx="8" className="fill-blue-50 dark:fill-blue-950/40 stroke-blue-600" strokeWidth="1.5" />
+            <text x="235" y="75" textAnchor="middle" className="text-[11px] font-sans fill-blue-600 dark:fill-blue-400 font-bold">Normalization</text>
+            <text x="235" y="93" textAnchor="middle" className="text-[9px] font-mono fill-slate-600 dark:fill-slate-300">Schema Validation</text>
+
+            {/* Output */}
+            <path d="M290 80h40" stroke="currentColor" strokeWidth="1.5" />
+            <polygon points="330,80 324,76 324,84" fill="currentColor" />
+
+            <rect x="335" y="55" width="55" height="50" rx="6" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="362" y="84" textAnchor="middle" className="text-[10px] font-sans fill-slate-700 dark:fill-slate-300 font-semibold">Clean DB</text>
+          </svg>
+        )}
+
+        {type === 'engineering' && (
+          <svg viewBox="0 0 400 160" className="w-full h-full text-slate-800 dark:text-slate-200">
+            {/* Input stream */}
+            <rect x="30" y="50" width="75" height="60" rx="8" className="fill-white dark:fill-slate-800 stroke-slate-300 dark:stroke-slate-700" strokeWidth="1.5" />
+            <text x="67" y="78" textAnchor="middle" className="text-[10px] font-sans fill-slate-700 dark:fill-slate-300 font-semibold">Raw Documents</text>
+            <text x="67" y="94" textAnchor="middle" className="text-[8px] font-mono fill-slate-500">Unstructured</text>
+
+            <path d="M105 80h35" stroke="currentColor" strokeWidth="1.5" />
+            <polygon points="140,80 134,76 134,84" fill="currentColor" />
+
+            {/* Parsing & Heuristic Router */}
+            <rect x="145" y="35" width="110" height="90" rx="8" className="fill-slate-100 dark:fill-slate-800/80 stroke-slate-400 dark:stroke-slate-600" strokeWidth="1.5" />
+            <text x="200" y="65" textAnchor="middle" className="text-[11px] font-sans fill-slate-900 dark:fill-white font-bold">Extraction Core</text>
+            <text x="200" y="82" textAnchor="middle" className="text-[9px] font-mono fill-blue-600 dark:fill-blue-400">Deterministic + NLP</text>
+            <text x="200" y="100" textAnchor="middle" className="text-[8px] font-mono fill-slate-500">Confidence Scoring</text>
+
+            {/* Fork to Auto vs Review */}
+            <path d="M255 65h40v-20h25" fill="none" stroke="#10b981" strokeWidth="1.5" />
+            <path d="M255 95h40v20h25" fill="none" stroke="#f59e0b" strokeWidth="1.5" />
+
+            <rect x="325" y="30" width="65" height="32" rx="6" className="fill-emerald-50 dark:fill-emerald-950/40 stroke-emerald-500" strokeWidth="1.5" />
+            <text x="357" y="50" textAnchor="middle" className="text-[9px] font-sans fill-emerald-700 dark:fill-emerald-300 font-bold">&gt;98% Direct Pass</text>
+
+            <rect x="325" y="98" width="65" height="32" rx="6" className="fill-amber-50 dark:fill-amber-950/40 stroke-amber-500" strokeWidth="1.5" />
+            <text x="357" y="118" textAnchor="middle" className="text-[9px] font-sans fill-amber-700 dark:fill-amber-300 font-bold">10s Review</text>
+          </svg>
+        )}
+
+        {(type === 'integration' || type === 'governance') && (
+          <svg viewBox="0 0 400 160" className="w-full h-full text-slate-800 dark:text-slate-200">
+            {/* 4 Stage Roadmap */}
+            <circle cx="60" cy="80" r="24" className="fill-white dark:fill-slate-800 stroke-blue-500" strokeWidth="2" />
+            <text x="60" y="84" textAnchor="middle" className="text-xs font-mono font-bold fill-blue-600 dark:fill-blue-400">W1</text>
+            <text x="60" y="122" textAnchor="middle" className="text-[9px] font-sans fill-slate-600 dark:fill-slate-400">Shadow</text>
+
+            <line x1="84" y1="80" x2="136" y2="80" stroke="currentColor" strokeWidth="1.5" />
+
+            <circle cx="160" cy="80" r="24" className="fill-white dark:fill-slate-800 stroke-blue-500" strokeWidth="2" />
+            <text x="160" y="84" textAnchor="middle" className="text-xs font-mono font-bold fill-blue-600 dark:fill-blue-400">W2</text>
+            <text x="160" y="122" textAnchor="middle" className="text-[9px] font-sans fill-slate-600 dark:fill-slate-400">Blueprint</text>
+
+            <line x1="184" y1="80" x2="236" y2="80" stroke="currentColor" strokeWidth="1.5" />
+
+            <circle cx="260" cy="80" r="24" className="fill-white dark:fill-slate-800 stroke-blue-500" strokeWidth="2" />
+            <text x="260" y="84" textAnchor="middle" className="text-xs font-mono font-bold fill-blue-600 dark:fill-blue-400">W3</text>
+            <text x="260" y="122" textAnchor="middle" className="text-[9px] font-sans fill-slate-600 dark:fill-slate-400">Build</text>
+
+            <line x1="284" y1="80" x2="336" y2="80" stroke="currentColor" strokeWidth="1.5" />
+
+            <circle cx="350" cy="80" r="24" className="fill-emerald-50 dark:fill-emerald-950/40 stroke-emerald-500" strokeWidth="2" />
+            <text x="350" y="84" textAnchor="middle" className="text-xs font-mono font-bold fill-emerald-600 dark:fill-emerald-400">W4</text>
+            <text x="350" y="122" textAnchor="middle" className="text-[9px] font-sans fill-emerald-600 dark:fill-emerald-400 font-semibold">Deploy</text>
+          </svg>
+        )}
+      </div>
+
+      <div className="relative z-10 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400">
+        <span className="font-mono">ENGINEERING ARCHITECTURE</span>
+        <span className="font-mono text-blue-600 dark:text-blue-400">Meck Systems Lab</span>
+      </div>
     </div>
   );
 };

@@ -11,6 +11,6 @@ export interface BlogPost {
     name: string;
     role: string;
   };
-  imageType: 'cooling' | 'vectors' | 'datacenter' | 'generator' | 'almanac' | 'privacy';
+  pipelineTheme: 'discovery' | 'architecture' | 'engineering' | 'integration' | 'governance';
   content: string[];
 }
