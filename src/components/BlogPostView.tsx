@@ -114,7 +114,7 @@ export const BlogPostView: React.FC<BlogPostViewProps> = ({
                 onClick={onRequestAudit}
                 className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-all cursor-pointer inline-flex items-center gap-1.5"
               >
-                <span>Request a Process Audit</span>
+                <span>Schedule a Consultation</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </button>
             </div>

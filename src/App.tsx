@@ -5,10 +5,8 @@ import { BlogList } from './components/BlogList';
 import { BlogPostView } from './components/BlogPostView';
 import { TestimonialsPage } from './components/TestimonialsPage';
 import { ThemeToggle } from './components/ThemeToggle';
-import { ProcessAuditModal } from './components/ProcessAuditModal';
-import { InteractiveDiagnostic } from './components/InteractiveDiagnostic';
+import { ConsultationModal } from './components/ConsultationModal';
 import { BLOG_POSTS } from './data/blogPosts';
-import { CASE_STUDIES } from './data/caseStudies';
 import { TESTIMONIALS } from './data/testimonials';
 import { BlogPost } from './types/blog';
 import { useTheme } from './hooks/useTheme';
@@ -18,15 +16,16 @@ import {
   Workflow, 
   Cpu, 
   CheckCircle2, 
-  Layers, 
   Menu, 
   X, 
-  ChevronRight,
   Database,
   FileText,
   Clock,
-  ShieldCheck,
-  Quote
+  Quote,
+  Send,
+  Mail,
+  User,
+  Building2
 } from 'lucide-react';
 
 export default function App() {
@@ -34,7 +33,14 @@ export default function App() {
   const [currentView, setCurrentView] = useState<'home' | 'blog' | 'post' | 'testimonials'>('home');
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isAuditModalOpen, setIsAuditModalOpen] = useState(false);
+  const [isConsultModalOpen, setIsConsultModalOpen] = useState(false);
+
+  // Inline contact form state for homepage
+  const [contactName, setContactName] = useState('');
+  const [contactEmail, setContactEmail] = useState('');
+  const [contactCompany, setContactCompany] = useState('');
+  const [contactNotes, setContactNotes] = useState('');
+  const [contactSubmitted, setContactSubmitted] = useState(false);
 
   // Sync hash routing
   useEffect(() => {
@@ -112,19 +118,25 @@ export default function App() {
     }
   };
 
+  const handleInlineContactSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!contactName.trim() || !contactEmail.trim() || !contactCompany.trim()) return;
+    setContactSubmitted(true);
+  };
+
   return (
     <div className="min-h-screen bg-white text-slate-900 dark:bg-[#070b14] dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
       
-      {/* Top Header - Strict 3-zone contract, no status indicator */}
+      {/* Top Header - Responsive with Light/Dark/Auto Toggle */}
       <header className="sticky top-0 z-40 w-full border-b border-slate-200/80 dark:border-slate-800/80 bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 sm:gap-8 px-4 sm:px-6">
           
-          {/* Zone 1: Brand wordmark */}
+          {/* Brand Wordmark & Logo */}
           <div onClick={navigateToHome} className="cursor-pointer">
             <Logo size="md" />
           </div>
 
-          {/* Zone 2: 4 clean, single-line navigation links */}
+          {/* Desktop Navigation Links */}
           <nav className="hidden md:flex items-center gap-6 text-xs font-medium text-slate-600 dark:text-slate-400">
             <button
               onClick={() => scrollToSection('approach')}
@@ -148,7 +160,7 @@ export default function App() {
                   : 'hover:text-slate-900 dark:hover:text-white'
               }`}
             >
-              Case Results
+              Client Results
             </button>
 
             <button
@@ -163,7 +175,7 @@ export default function App() {
             </button>
           </nav>
 
-          {/* Zone 3: Theme Toggle + 1 Primary Action Button */}
+          {/* Header Controls: Theme Toggle & Primary Consultation Action */}
           <div className="hidden md:flex items-center gap-3 shrink-0">
             <ThemeToggle
               themeMode={themeMode}
@@ -173,14 +185,14 @@ export default function App() {
 
             <button
               type="button"
-              onClick={() => setIsAuditModalOpen(true)}
+              onClick={() => setIsConsultModalOpen(true)}
               className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer whitespace-nowrap"
             >
-              Request Process Audit
+              Schedule Consultation
             </button>
           </div>
 
-          {/* Mobile Right Controls: Theme Toggle & Hamburger */}
+          {/* Mobile Right Controls: Theme Toggle & Mobile Menu */}
           <div className="flex md:hidden items-center gap-2">
             <ThemeToggle
               themeMode={themeMode}
@@ -191,7 +203,7 @@ export default function App() {
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle mobile menu"
+              aria-label="Toggle navigation menu"
               className="p-2 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white cursor-pointer"
             >
               {mobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
@@ -257,11 +269,11 @@ export default function App() {
                 type="button"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  setIsAuditModalOpen(true);
+                  setIsConsultModalOpen(true);
                 }}
                 className="w-full py-2.5 rounded-lg bg-blue-600 text-white text-xs font-semibold tracking-wide text-center cursor-pointer shadow-xs"
               >
-                Request Process Audit
+                Schedule Consultation
               </button>
             </div>
           </div>
@@ -291,7 +303,7 @@ export default function App() {
 
               <div className="relative mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-6 z-10">
                 
-                {/* Quiet Kicker (Zero-Pill, Unboxed Text) */}
+                {/* Quiet Kicker */}
                 <div className="inline-flex items-center gap-2 text-xs font-mono text-slate-600 dark:text-slate-400">
                   <span className="font-semibold text-blue-600 dark:text-blue-400">MECK PIPELINE CONSULTING</span>
                   <span aria-hidden="true">·</span>
@@ -313,10 +325,10 @@ export default function App() {
                 <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 max-w-md mx-auto">
                   <button
                     type="button"
-                    onClick={() => setIsAuditModalOpen(true)}
+                    onClick={() => setIsConsultModalOpen(true)}
                     className="w-full sm:w-auto h-12 px-7 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold tracking-wide flex items-center justify-center gap-2 transition-all shadow-sm cursor-pointer"
                   >
-                    <span>Request a Process Audit</span>
+                    <span>Schedule a Consultation</span>
                     <ArrowRight className="h-4 w-4" />
                   </button>
 
@@ -329,7 +341,7 @@ export default function App() {
                   </button>
                 </div>
 
-                {/* Trust Signifiers - Clean Unboxed Text */}
+                {/* Trust Signifiers */}
                 <div className="pt-2 flex flex-wrap items-center justify-center gap-3 text-xs text-slate-500 dark:text-slate-400">
                   <span>Zero Off-the-Shelf Compromises</span>
                   <span aria-hidden="true">·</span>
@@ -366,7 +378,7 @@ export default function App() {
                       30 Days
                     </div>
                     <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      From Audit to Production Pilot
+                      From Discovery to Production Pilot
                     </div>
                   </div>
                   <div className="pt-3 md:pt-0">
@@ -374,7 +386,7 @@ export default function App() {
                       0 Seats
                     </div>
                     <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                      No Recurring SaaS License Fees
+                      No Per-Seat SaaS License Fees
                     </div>
                   </div>
                 </div>
@@ -490,14 +502,7 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION 3: INTERACTIVE DIAGNOSTIC */}
-            <section className="py-16 md:py-20 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#070e1e]/40">
-              <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                <InteractiveDiagnostic onOpenAuditModal={() => setIsAuditModalOpen(true)} />
-              </div>
-            </section>
-
-            {/* SECTION 4: CAPABILITIES / PIPELINE TYPES */}
+            {/* SECTION 3: CAPABILITIES / PIPELINE TYPES */}
             <section id="capabilities" className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800">
               <div className="mx-auto max-w-6xl px-4 sm:px-6">
                 
@@ -574,88 +579,8 @@ export default function App() {
               </div>
             </section>
 
-            {/* SECTION 5: CASE STUDIES IN-DEPTH */}
-            <section className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#070d1a]/50">
-              <div className="mx-auto max-w-6xl px-4 sm:px-6">
-                
-                <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4 mb-12">
-                  <div className="max-w-xl space-y-2">
-                    <div className="text-xs font-mono font-semibold uppercase tracking-wider text-blue-600 dark:text-blue-400">
-                      INVESTIGATION &amp; RESULTS
-                    </div>
-                    <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white">
-                      Real-World Case Studies
-                    </h2>
-                    <p className="text-sm text-slate-600 dark:text-slate-300">
-                      See how our process discovery translated into production pipelines across different sectors.
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={navigateToTestimonials}
-                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>View all client endorsements</span>
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {CASE_STUDIES.slice(0, 2).map((cs) => (
-                    <div
-                      key={cs.id}
-                      className="p-6 sm:p-8 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/70 shadow-xs flex flex-col justify-between space-y-6"
-                    >
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
-                          <span className="font-semibold text-blue-600 dark:text-blue-400">{cs.clientIndustry}</span>
-                          <span className="font-mono">{cs.companyName}</span>
-                        </div>
-
-                        <h3 className="text-xl font-bold text-slate-900 dark:text-white tracking-tight leading-snug">
-                          {cs.headline}
-                        </h3>
-
-                        <div className="space-y-2 text-xs text-slate-600 dark:text-slate-300 leading-relaxed">
-                          <div>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">The Problem:</span> {cs.initialProblem}
-                          </div>
-                          <div>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">What We Discovered:</span> {cs.investigationDiscovery}
-                          </div>
-                          <div>
-                            <span className="font-semibold text-slate-800 dark:text-slate-200">The Pipeline:</span> {cs.pipelineSolution}
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="pt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
-                        <div>
-                          <div className="text-2xl font-extrabold text-blue-600 dark:text-blue-400 font-mono">
-                            {cs.keyMetric}
-                          </div>
-                          <div className="text-[11px] text-slate-500 dark:text-slate-400">
-                            {cs.metricLabel}
-                          </div>
-                        </div>
-
-                        <div className="flex flex-wrap gap-1.5 justify-end max-w-[200px]">
-                          {cs.architectureTags.slice(0, 2).map((tag, i) => (
-                            <span key={i} className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
-                              #{tag}
-                            </span>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-              </div>
-            </section>
-
-            {/* SECTION 6: CLIENT QUOTE SPOTLIGHT */}
-            <section className="py-16 md:py-20 border-b border-slate-200 dark:border-slate-800">
+            {/* SECTION 4: CLIENT QUOTE SPOTLIGHT */}
+            <section className="py-16 md:py-20 border-b border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-[#070d1a]/40">
               <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-6">
                 <Quote className="h-8 w-8 text-blue-600 dark:text-blue-400 mx-auto opacity-70" />
                 <blockquote className="text-lg sm:text-xl md:text-2xl font-medium text-slate-800 dark:text-slate-200 leading-relaxed italic">
@@ -669,39 +594,146 @@ export default function App() {
                     {TESTIMONIALS[0].role} · {TESTIMONIALS[0].company}
                   </div>
                 </div>
+                <div className="pt-2">
+                  <button
+                    onClick={navigateToTestimonials}
+                    className="text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline inline-flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>Read all client endorsements and operational outcomes</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
               </div>
             </section>
 
-            {/* SECTION 7: FINAL CALL TO ACTION */}
-            <section className="py-16 md:py-24 bg-slate-900 text-white dark:bg-[#060a14] border-t border-slate-800">
-              <div className="mx-auto max-w-4xl px-4 sm:px-6 text-center space-y-6">
-                <div className="text-xs font-mono uppercase tracking-widest text-blue-400 font-semibold">
-                  NEXT STEPS
+            {/* SECTION 5: CLEAN CONSULTATION & CONTACT FORM */}
+            <section id="contact" className="py-16 md:py-24 border-b border-slate-200 dark:border-slate-800">
+              <div className="mx-auto max-w-3xl px-4 sm:px-6">
+                
+                <div className="text-center space-y-3 mb-10">
+                  <div className="text-xs font-mono uppercase tracking-widest text-blue-600 dark:text-blue-400 font-semibold">
+                    GET IN TOUCH
+                  </div>
+                  <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white [text-wrap:balance]">
+                    Ready to Uncover Where Your Team is Losing Time?
+                  </h2>
+                  <p className="max-w-xl mx-auto text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                    You don't need an RFP or a formal requirements document. Reach out with your current operational friction, and our engineering team will walk through your processes with you.
+                  </p>
                 </div>
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight [text-wrap:balance]">
-                  Ready to Uncover Where Your Team is Losing Time?
-                </h2>
-                <p className="max-w-2xl mx-auto text-sm sm:text-base text-slate-300 leading-relaxed font-normal">
-                  You don't need a formal RFP or a finished requirements document. 
-                  Reach out with your current operational friction, and our engineering team will walk through your processes with you.
-                </p>
-                <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
-                  <button
-                    type="button"
-                    onClick={() => setIsAuditModalOpen(true)}
-                    className="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-semibold tracking-wide transition-all shadow-md cursor-pointer flex items-center justify-center gap-2"
-                  >
-                    <span>Schedule a Process Investigation</span>
-                    <ArrowRight className="h-4 w-4" />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={navigateToBlog}
-                    className="w-full sm:w-auto px-6 py-3.5 rounded-lg border border-slate-700 bg-slate-800/80 hover:bg-slate-700 text-slate-200 text-xs sm:text-sm font-medium transition-all cursor-pointer"
-                  >
-                    Read Engineering Insights
-                  </button>
+
+                <div className="p-6 sm:p-10 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900/60 shadow-xs">
+                  {contactSubmitted ? (
+                    <div className="py-8 text-center space-y-4 animate-in fade-in">
+                      <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-300 dark:border-emerald-800">
+                        <CheckCircle2 className="h-8 w-8" />
+                      </div>
+                      <h3 className="text-xl font-bold text-slate-900 dark:text-white">
+                        Consultation Request Received
+                      </h3>
+                      <p className="text-sm text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
+                        Thank you, <span className="font-semibold text-slate-900 dark:text-white">{contactName}</span>. 
+                        We've received your notes for <span className="font-semibold text-slate-900 dark:text-white">{contactCompany}</span>. 
+                        One of our engineers will reply directly to <span className="font-semibold text-blue-600 dark:text-blue-400">{contactEmail}</span> within 1 business day.
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setContactSubmitted(false);
+                          setContactName('');
+                          setContactEmail('');
+                          setContactCompany('');
+                          setContactNotes('');
+                        }}
+                        className="text-xs text-blue-600 dark:text-blue-400 hover:underline pt-2 cursor-pointer font-medium"
+                      >
+                        Send another inquiry
+                      </button>
+                    </div>
+                  ) : (
+                    <form onSubmit={handleInlineContactSubmit} className="space-y-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            Your Name *
+                          </label>
+                          <div className="relative">
+                            <User className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                            <input
+                              type="text"
+                              required
+                              value={contactName}
+                              onChange={(e) => setContactName(e.target.value)}
+                              placeholder="Alex Morgan"
+                              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500"
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                            Work Email *
+                          </label>
+                          <div className="relative">
+                            <Mail className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                            <input
+                              type="email"
+                              required
+                              value={contactEmail}
+                              onChange={(e) => setContactEmail(e.target.value)}
+                              placeholder="alex@company.com"
+                              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                          Company / Organization *
+                        </label>
+                        <div className="relative">
+                          <Building2 className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
+                          <input
+                            type="text"
+                            required
+                            value={contactCompany}
+                            onChange={(e) => setContactCompany(e.target.value)}
+                            placeholder="e.g. Acme Logistics or Pacific Distribution"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500"
+                          />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
+                          Current Bottleneck or Workflow (Optional)
+                        </label>
+                        <textarea
+                          rows={3}
+                          value={contactNotes}
+                          onChange={(e) => setContactNotes(e.target.value)}
+                          placeholder="Briefly describe what your staff spends excessive manual time on..."
+                          className="w-full p-3 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800/80 text-slate-900 dark:text-white text-xs placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-600 dark:focus:ring-blue-500 leading-relaxed"
+                        />
+                      </div>
+
+                      <div className="pt-2 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                        <span className="text-[11px] text-slate-500 dark:text-slate-400">
+                          Direct conversation with an engineer. No sales deck.
+                        </span>
+                        <button
+                          type="submit"
+                          className="w-full sm:w-auto px-6 py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold tracking-wide transition-all shadow-xs cursor-pointer flex items-center justify-center gap-1.5"
+                        >
+                          <span>Request Consultation</span>
+                          <Send className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </div>
+
               </div>
             </section>
 
@@ -723,15 +755,15 @@ export default function App() {
             onBack={navigateToBlog}
             onSelectPost={navigateToPost}
             onGoHome={navigateToHome}
-            onRequestAudit={() => setIsAuditModalOpen(true)}
+            onRequestAudit={() => setIsConsultModalOpen(true)}
           />
         )}
 
-        {/* VIEW 4: TESTIMONIALS / CASE RESULTS */}
+        {/* VIEW 4: TESTIMONIALS / CLIENT RESULTS */}
         {currentView === 'testimonials' && (
           <TestimonialsPage
             onGoHome={navigateToHome}
-            onRequestAudit={() => setIsAuditModalOpen(true)}
+            onRequestAudit={() => setIsConsultModalOpen(true)}
           />
         )}
 
@@ -755,8 +787,11 @@ export default function App() {
             <button onClick={() => scrollToSection('approach')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
               Methodology
             </button>
+            <button onClick={() => scrollToSection('capabilities')} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
+              Pipeline Types
+            </button>
             <button onClick={navigateToTestimonials} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
-              Case Results
+              Client Results
             </button>
             <button onClick={navigateToBlog} className="hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer">
               Engineering Insights
@@ -767,10 +802,10 @@ export default function App() {
         </div>
       </footer>
 
-      {/* Interactive Process Audit Modal */}
-      <ProcessAuditModal
-        isOpen={isAuditModalOpen}
-        onClose={() => setIsAuditModalOpen(false)}
+      {/* Clean, Non-Wizard Consultation Modal */}
+      <ConsultationModal
+        isOpen={isConsultModalOpen}
+        onClose={() => setIsConsultModalOpen(false)}
       />
 
     </div>

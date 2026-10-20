@@ -153,7 +153,7 @@ export const TestimonialsPage: React.FC<TestimonialsPageProps> = ({
               onClick={onRequestAudit}
               className="px-6 py-3 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold tracking-wide transition-all shadow-sm cursor-pointer inline-flex items-center gap-2"
             >
-              <span>Schedule a Process Investigation</span>
+              <span>Schedule a Consultation</span>
               <ArrowRight className="h-4 w-4" />
             </button>
           </div>

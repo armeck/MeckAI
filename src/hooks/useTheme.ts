@@ -24,9 +24,13 @@ export function useTheme() {
 
     if (isDark) {
       document.documentElement.classList.add('dark');
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.documentElement.style.colorScheme = 'dark';
       setResolvedTheme('dark');
     } else {
       document.documentElement.classList.remove('dark');
+      document.documentElement.setAttribute('data-theme', 'light');
+      document.documentElement.style.colorScheme = 'light';
       setResolvedTheme('light');
     }
   }, []);
@@ -40,9 +44,13 @@ export function useTheme() {
       if (currentMode === 'system') {
         if (e.matches) {
           document.documentElement.classList.add('dark');
+          document.documentElement.setAttribute('data-theme', 'dark');
+          document.documentElement.style.colorScheme = 'dark';
           setResolvedTheme('dark');
         } else {
           document.documentElement.classList.remove('dark');
+          document.documentElement.setAttribute('data-theme', 'light');
+          document.documentElement.style.colorScheme = 'light';
           setResolvedTheme('light');
         }
       }
@@ -59,7 +67,6 @@ export function useTheme() {
   };
 
   const toggleTheme = () => {
-    // If system, toggle to opposite of current resolved; otherwise cycle light <-> dark
     if (themeMode === 'system') {
       const next = resolvedTheme === 'dark' ? 'light' : 'dark';
       setThemeMode(next);
